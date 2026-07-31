@@ -2012,25 +2012,116 @@ $descriptions = [
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <?php
                                 $activeScholars = [
-                                    ["initials" => "SM", "name" => "Sagnik Mitra", "desig" => "Ph.D. Researcher (Expected Spring 2027)", "inst" => "IIT Indore"],
-                                    ["initials" => "KS", "name" => "Kavita Singh", "desig" => "Ph.D. Researcher (Expected Autumn 2026)", "inst" => "IIT Indore"],
-                                    ["initials" => "RD", "name" => "Raveena Dhore", "desig" => "Ph.D. Researcher (Expected Autumn 2026)", "inst" => "IIT Indore"],
-                                    ["initials" => "MR", "name" => "Duddugunta Mohanchaitanya Reddy", "desig" => "Ph.D. Researcher (Expected Summer 2027)", "inst" => "IIT Indore"],
-                                    ["initials" => "BG", "name" => "Buddhodev Ghosh", "desig" => "Ph.D. Researcher (Expected Summer 2029)", "inst" => "IIT Indore"],
-                                    ["initials" => "KK", "name" => "Katta Keerthana", "desig" => "Ph.D. Researcher (Expected Summer 2030)", "inst" => "IIT Indore"],
-                                    ["initials" => "CS", "name" => "Chandrabhan Singh", "desig" => "M.Tech. Student (Expected Summer 2027)", "inst" => "IIT Indore"],
-                                    ["initials" => "SS", "name" => "Shashank Shinde", "desig" => "M.Tech. Student (Expected Summer 2027)", "inst" => "IIT Indore"]
+                                    [
+                                        "initials" => "SM", 
+                                        "name" => "Sagnik Mitra", 
+                                        "desig" => "Ph.D. Researcher (Expected Spring 2027)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Hexadic Tank Modelling",
+                                        "email" => "phd2001271007@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "KS", 
+                                        "name" => "Kavita Singh", 
+                                        "desig" => "Ph.D. Researcher (Expected Autumn 2026)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Bioprocess Scale-up and Control",
+                                        "email" => "phd2001271007@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "RD", 
+                                        "name" => "Raveena Dhore", 
+                                        "desig" => "Ph.D. Researcher (Expected Autumn 2026)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Toxicity of Non-stick Cookware Under Indian Cooking Conditions",
+                                        "email" => "phd2001271006@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "MR", 
+                                        "name" => "Duddugunta Mohanchaitanya Reddy", 
+                                        "desig" => "Ph.D. Researcher (Expected Summer 2027)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Plant–Microbiome–Soil (Kuṇapajala)",
+                                        "email" => "mscphd2301171012@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "BG", 
+                                        "name" => "Buddhodev Ghosh", 
+                                        "desig" => "Ph.D. Researcher (Expected Summer 2029)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Traditional Rainfall Prediction Models of Bhārat",
+                                        "email" => "phd2501192002@iiti.ac.in, buddhodevghosh@gmail.com"
+                                    ],
+                                    [
+                                        "initials" => "KK", 
+                                        "name" => "Katta Keerthana", 
+                                        "desig" => "Ph.D. Researcher (Expected Summer 2030)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Pest Management Using IKS Approaches",
+                                        "email" => "phd2501171011@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "CS", 
+                                        "name" => "Chandrabhan Singh", 
+                                        "desig" => "M.Tech. Student (Expected Summer 2027)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "Design and Fabrication of a Low-cost Automated FPLC System",
+                                        "email" => "mt2502171006@iiti.ac.in"
+                                    ],
+                                    [
+                                        "initials" => "SS", 
+                                        "name" => "Shashank Sanjay Shinde", 
+                                        "desig" => "M.Tech. Student (Expected Summer 2027)", 
+                                        "inst" => "IIT Indore",
+                                        "project" => "IR-Based Glucose Sensing and Closed-Loop Insulin Delivery System",
+                                        "email" => "mt2502171020@iiti.ac.in"
+                                    ]
                                 ];
                                 foreach ($activeScholars as $sch) {
                                 ?>
-                                <div class="bg-white border border-slate-150 rounded-xl p-4 flex flex-col justify-between text-xs min-h-[7rem] hover:shadow-md transition-all">
+                                <div class="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 flex flex-col justify-between text-xs hover:shadow-md transition-all space-y-4">
                                     <div>
-                                        <h5 class="font-bold text-slate-800 text-sm"><?php echo htmlspecialchars($sch['name']); ?></h5>
-                                        <p class="text-[10px] text-slate-400 mt-1 font-semibold uppercase tracking-wider"><?php echo htmlspecialchars($sch['desig']); ?></p>
+                                        <div class="flex items-center justify-between gap-2">
+                                            <h5 class="font-bold text-blue-700 text-sm"><?php echo htmlspecialchars($sch['name']); ?></h5>
+                                        </div>
+                                        <p class="text-[10.5px] text-st-orange font-semibold uppercase tracking-wider mt-1"><?php echo htmlspecialchars($sch['desig']); ?></p>
+                                        
+                                        <div class="mt-3.5 pt-3 border-t border-slate-100 space-y-2.5">
+                                            <div class="flex items-start gap-2 text-[11px] text-slate-700 font-sans">
+                                                <i data-lucide="flask-conical" class="h-3.5 w-3.5 text-st-orange shrink-0 mt-0.5"></i>
+                                                <div>
+                                                    <span class="font-bold text-slate-800">Project: </span>
+                                                    <span class="text-slate-600 font-medium leading-relaxed"><?php echo htmlspecialchars($sch['project']); ?></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-start gap-2 text-[10.5px] text-slate-600 font-sans">
+                                                <i data-lucide="mail" class="h-3.5 w-3.5 text-st-blue shrink-0 mt-0.5"></i>
+                                                <div class="flex flex-col gap-1">
+                                                    <?php
+                                                    $emailsList = is_array($sch['email']) ? $sch['email'] : array_map('trim', explode(',', $sch['email']));
+                                                    foreach ($emailsList as $em) {
+                                                        if (!empty($em)) {
+                                                    ?>
+                                                        <a href="mailto:<?php echo htmlspecialchars($em); ?>" class="hover:text-st-blue transition-colors font-mono hover:underline break-all">
+                                                            <?php echo htmlspecialchars($em); ?>
+                                                        </a>
+                                                    <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span class="text-[11px] text-slate-600 bg-slate-50 border border-slate-150 px-2 py-1.5 rounded italic mt-3 block text-center font-sans font-light">
-                                        <?php echo htmlspecialchars($sch['inst']); ?>
-                                    </span>
+                                    
+                                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-sans">
+                                        <span class="inline-flex items-center gap-1.5 font-medium text-slate-600">
+                                            <i data-lucide="building" class="h-3.5 w-3.5 text-slate-400"></i>
+                                            <?php echo htmlspecialchars($sch['inst']); ?>
+                                        </span>
+                                        <span class="text-[9.5px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Active Scholar</span>
+                                    </div>
                                 </div>
                                 <?php
                                 }
@@ -3559,10 +3650,11 @@ $descriptions = [
             },
             sagnik: {
                 name: "Sagnik Mitra",
-                tag: "Ph.D. Scholar",
-                desc: "Conducts systems biology optimization. Dedicated to mapping biofuels dynamic reactions with integrated process automation modules.",
-                topic: "Advanced Biocatalysis & Reactor Scaling Studies",
-                highlight: "Expert in high-density dynamic bioreactor configuration."
+                tag: "Ph.D. Researcher (Expected Spring 2027)",
+                desc: "Focuses on hexadic tank system control, bioprocess automation, and multi-criteria hardware evaluation using advanced MPC variants.",
+                topic: "Hexadic Tank System Control & Bioprocess Automation",
+                highlight: "Authored leading research on MPC variants for hexadic tank system control in Systems Microbiology and Biomanufacturing.",
+                email: "sagnik.mitra@iiti.ac.in"
             },
             kavita: {
                 name: "Kavita Singh",
