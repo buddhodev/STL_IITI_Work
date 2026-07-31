@@ -87,16 +87,84 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
 // --- PHP TAB FALLBACK DETERMINATOR ---
 $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'home';
-if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications', 'learning', 'contact'])) {
+if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications', 'learning', 'contact', 'gallery', 'weather'])) {
     $activeTab = 'home';
 }
+
+$titles = [
+    "home" => "Sustainable Technologies Laboratory (STLab) | IIT Indore",
+    "research" => "Research Areas | STLab | IIT Indore",
+    "people" => "Research Team | STLab | IIT Indore",
+    "publications" => "Publications | STLab | IIT Indore",
+    "news" => "News | STLab | IIT Indore",
+    "learning" => "Learning Resources | STLab | IIT Indore",
+    "gallery" => "Lab Gallery | STLab | IIT Indore",
+    "weather" => "IITI Weather Statistics | STLab | IIT Indore",
+    "contact" => "Contact | STLab | IIT Indore"
+];
+
+$descriptions = [
+    "home" => "Official website of Sustainable Technologies Laboratory led by Prof. G. S. Murthy at IIT Indore. Research in Sustainable Technologies, Indian Knowledge Systems (IKS), Traditional Ecological Knowledge (TEK), wastewater treatment and bioenergy.",
+    "research" => "Research in sustainable technologies, systems engineering, IKS, TEK, circular economy, wastewater treatment and bioresource engineering.",
+    "people" => "Meet the researchers, doctoral students, and scholars of STLab, IIT Indore.",
+    "publications" => "Research publications from Sustainable Technologies Laboratory.",
+    "news" => "Latest news and announcements from Sustainable Technologies Laboratory (STLab) at IIT Indore.",
+    "learning" => "Learning resources, tutorials, and academic materials provided by STLab.",
+    "gallery" => "Browse photos of the laboratory, students, events, and campus life at STLab, IIT Indore.",
+    "weather" => "Real-time weather statistics and monitoring from IIT Indore campus.",
+    "contact" => "Get in touch with the Sustainable Technologies Laboratory at IIT Indore."
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sustainable Technologies Laboratory | IIT Indore (IITI)</title>
+    <title><?= $titles[$activeTab] ?? $titles['home']; ?></title>
+    <meta name="description" content="<?= $descriptions[$activeTab] ?? $descriptions['home']; ?>">
+    <link rel="canonical" href="https://stlab.iiti.ac.in/?tab=<?=$activeTab?>">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="<?= $titles[$activeTab] ?? $titles['home']; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stlab.iiti.ac.in/?tab=<?=$activeTab?>">
+    <meta property="og:image" content="https://stlab.iiti.ac.in/assets/STL_New_PNG.png">
+    <meta property="og:description" content="<?= $descriptions[$activeTab] ?? $descriptions['home']; ?>">
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Sustainable Technologies Laboratory (STLab)",
+      "alternateName": "STLab, IIT Indore",
+      "url": "https://stlab.iiti.ac.in",
+      "logo": "https://stlab.iiti.ac.in/assets/STL_New_PNG.png",
+      "parentOrganization": {
+        "@type": "EducationalOrganization",
+        "name": "Indian Institute of Technology Indore",
+        "url": "https://www.iiti.ac.in"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Khandwa Road, Simrol",
+        "addressLocality": "Indore",
+        "addressRegion": "Madhya Pradesh",
+        "postalCode": "453552",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "ganti.murthy@iiti.ac.in",
+        "contactType": "academic inquiry"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Prof. Ganti S. Murthy"
+      },
+      "description": "Research laboratory at IIT Indore focusing on Sustainable Technologies, Indian Knowledge Systems (IKS), Traditional Ecological Knowledge (TEK), wastewater treatment, and bioenergy."
+    }
+    </script>
     <!-- Tailwind CSS Dynamic Integration -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -117,7 +185,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
         };
     </script>
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/stl_logo.svg" />
+    <link rel="icon" type="image/png" href="assets/stlab-logo.png?v=3" />
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
     <style>
@@ -145,6 +213,19 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            gap: 3rem;
+            width: max-content;
+            animation: marquee 35s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
         @keyframes phpTwinkle {
             0%, 100% {
                 opacity: 0.1;
@@ -157,28 +238,28 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between text-slate-850 antialiased selection:bg-st-orange/30 selection:text-white relative">
+<body class="min-h-screen flex flex-col justify-between text-slate-800 antialiased selection:bg-st-orange/30 selection:text-white relative">
 
-    <!-- Fixed elegant green-themed glitter background -->
+    <!-- Fixed elegant light/white-themed background with soft logo shades -->
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden select-none" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -10;">
-        <!-- Base rich radial gradient combining deep forest moss, spruce, and carbon charcoal -->
-        <div class="absolute inset-0" style="position: absolute; inset: 0; background: radial-gradient(circle at center, #022415 0%, #01170d 50%, #010d07 100%);"></div>
+        <!-- Base light fade-out radial gradient from complete white to premium soft gray-blue -->
+        <div class="absolute inset-0" style="position: absolute; inset: 0; background: radial-gradient(circle at center, #ffffff 0%, #f4f7fa 100%);"></div>
         
-        <!-- Ambient glowing color blobs -->
-        <div class="absolute rounded-full" style="position: absolute; top: 8%; left: 15%; width: 60vw; height: 60vh; background: rgba(16, 185, 129, 0.08); filter: blur(130px); animation: pulse 16s infinite ease-in-out;"></div>
-        <div class="absolute rounded-full" style="position: absolute; bottom: 15%; right: 10%; width: 55vw; height: 55vh; background: rgba(22, 163, 74, 0.06); filter: blur(150px); animation: pulse 20s infinite ease-in-out;"></div>
-        <div class="absolute rounded-full" style="position: absolute; top: 35%; right: 25%; width: 50vw; height: 50vh; background: rgba(13, 148, 136, 0.08); filter: blur(125px); animation: pulse 18s infinite ease-in-out;"></div>
+        <!-- Ambient glowing faded color blobs (extremely low opacity for soft aesthetic) -->
+        <div class="absolute rounded-full" style="position: absolute; top: 8%; left: 15%; width: 60vw; height: 60vh; background: rgba(12, 35, 64, 0.025); filter: blur(140px); animation: pulse 16s infinite ease-in-out;"></div>
+        <div class="absolute rounded-full" style="position: absolute; bottom: 15%; right: 10%; width: 55vw; height: 55vh; background: rgba(241, 122, 31, 0.02); filter: blur(150px); animation: pulse 20s infinite ease-in-out;"></div>
+        <div class="absolute rounded-full" style="position: absolute; top: 35%; right: 25%; width: 50vw; height: 50vh; background: rgba(43, 147, 34, 0.025); filter: blur(130px); animation: pulse 18s infinite ease-in-out;"></div>
         
-        <!-- Glitter particles -->
+        <!-- Pastel fine glitter particles overlay for light background -->
         <?php for ($i = 0; $i < 34; $i++): 
             $pRandom = sin($i * 92837.283) * 0.5 + 0.5;
             
-            // Professional sustainable color spectrum: emerald-400, bio-energy amber-500, pure mint-500
-            $color = 'rgba(52, 211, 153, 0.45)';
+            // Soft academic logo shades suited for a beautiful white theme
+            $color = 'rgba(12, 35, 64, 0.22)'; // Soft Navy-slate-blue
             if ($pRandom > 0.7) {
-                $color = 'rgba(245, 158, 11, 0.35)';
+                $color = 'rgba(241, 122, 31, 0.22)'; // Soft Orange
             } else if ($pRandom > 0.4) {
-                $color = 'rgba(16, 185, 129, 0.45)';
+                $color = 'rgba(43, 147, 34, 0.22)'; // Soft Green
             }
             
             $x = $pRandom * 100;
@@ -196,7 +277,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     width: <?= $size ?>px; 
                     height: <?= $size ?>px; 
                     background-color: <?= $color ?>; 
-                    box-shadow: 0 0 <?= $size * 1.5 ?>px <?= $color ?>, 0 0 <?= $size * 3.5 ?>px rgba(255, 255, 255, 0.45);
+                    box-shadow: 0 0 <?= $size * 1.5 ?>px <?= $color ?>, 0 0 <?= $size * 3.5 ?>px rgba(255, 255, 255, 0.9);
                     animation: phpTwinkle <?= $duration ?>s infinite ease-in-out;
                     animation-delay: <?= $delay ?>s;
                 "
@@ -207,63 +288,22 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
     <!-- Sticky Academic Navigation Header -->
     <nav class="sticky top-0 bg-[#0c2340]/95 backdrop-blur-md border-b-[3px] border-st-orange/70 z-40 transition-all shadow-[0_4px_30px_rgba(0,0,0,0.25)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4.5 md:py-0 md:h-20 gap-4 md:gap-0">
                 
                 <!-- Premium Branded Logo and Title -->
-                <div class="flex items-center gap-3.5">
-                    <!-- STL Beautiful High Fidelity SVG Logo -->
-                    <div class="h-13 w-13 shrink-0 flex items-center justify-center">
-                        <svg
-                          width="52"
-                          height="52"
-                          viewBox="0 0 200 200"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="drop-shadow-[0_4px_8px_rgba(0,0,0,0.15)]"
-                        >
-                          <!-- 1. ORANGE LOTUS PETALS (BACKGROUND) -->
-                          <g id="orange-lotus-background">
-                            <!-- Central Top Petal -->
-                            <path d="M 100,170 C 80,120 78,70 100,25 C 122,70 120,120 100,170 Z" fill="#f37021" />
-                            <!-- Top Left Petal -->
-                            <path d="M 95,160 C 65,120 40,80 50,40 C 66,50 84,95 95,160 Z" fill="#f37021" />
-                            <!-- Top Right Petal -->
-                            <path d="M 105,160 C 135,120 160,80 150,40 C 134,50 116,95 105,160 Z" fill="#f37021" />
-                            <!-- Bottom Left Petal -->
-                            <path d="M 90,165 C 50,145 22,110 32,70 C 48,80 75,120 90,165 Z" fill="#f37021" />
-                            <!-- Bottom Right Petal -->
-                            <path d="M 110,165 C 150,145 178,110 168,70 C 152,80 125,120 110,165 Z" fill="#f37021" />
-                          </g>
-
-                          <!-- 2. INDUSTRIAL DEEP BLUE GEAR -->
-                          <g id="industrial-gear">
-                            <path
-                              d="M 100,60 L 115,60 C 116,54 117,48 117,48 L 132,53 C 131,59 128,64 128,64 C 134,68 139,73 144,78 L 155,71 L 165,82 L 153,91 C 157,98 160,105 161,112 L 176,112 L 176,128 L 161,128 C 159,136 156,143 152,150 L 162,159 L 151,170 L 141,159 C 135,164 128,168 121,171 L 121,185 L 106,185 L 106,171 C 104,171 102,170 100,170 Z"
-                              fill="#0e4a7c"
-                            />
-                          </g>
-
-                          <!-- 3. BIOLOGICAL GREEN LEAVES WITH WHITE CUT-OUT DIVIDERS -->
-                          <g id="biological-elements">
-                            <!-- Small Bottom-Left Leaf with White Border separation -->
-                            <path d="M 100,180 C 80,180 44,168 34,142 C 48,128 85,150 100,180 Z" fill="#1fa22e" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" />
-                            <!-- Central Vertical Primary Leaf with White Border separation -->
-                            <path d="M 100,185 C 68,160 66,120 66,95 C 66,55 88,40 100,34 C 112,40 134,55 134,95 C 134,120 132,160 100,185 Z" fill="#1fa22e" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" />
-                            <!-- Crisp Central Leaf stem line -->
-                            <path d="M 100,185 L 100,135" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
-                            <!-- Centered Bioenergy White Lightning Bolt Cutout (Electric Sign) -->
-                            <path d="M 106,62 L 92,102 L 105,102 L 93,148 L 115,108 L 102,108 Z" fill="#ffffff" />
-                          </g>
-                        </svg>
+                <div class="flex flex-col sm:flex-row items-center gap-3.5 text-center sm:text-left">
+                    <!-- STL Beautiful High Fidelity PNG Logo -->
+                    <div class="h-12 w-12 sm:h-13 sm:w-13 shrink-0 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 p-1.5 shadow-sm">
+                        <img src="assets/stlab-logo.png?v=3" alt="STLab Logo" class="h-9 sm:h-10.5 w-auto select-none object-contain" />
                     </div>
-                    <div>
-                        <span class="text-base font-extrabold text-white tracking-tight block leading-none drop-shadow-sm">
+                    <div class="space-y-0.5">
+                        <span class="text-sm sm:text-base font-extrabold text-white tracking-tight block leading-tight drop-shadow-sm">
                             Sustainable Technologies Laboratory
                         </span>
-                        <span class="text-[10.5px] text-[#ffa34d] font-bold tracking-widest block uppercase font-mono mt-0.5">
+                        <span class="text-[9.5px] sm:text-[10.5px] text-[#ffa34d] font-bold tracking-widest block uppercase font-mono">
                             IIT Indore
                         </span>
-                        <span class="text-[11px] text-slate-300 font-bold block font-sanskrit tracking-wide mt-0.5">
+                        <span class="text-[9.5px] sm:text-[11px] text-slate-300 font-medium block font-sanskrit tracking-wide leading-tight mt-1">
                             संवहनीय-तान्त्रिकी-गवेषणशाला (भारतीय-प्राद्यौगिकी-संस्थानम् इन्दौरस्थम्)
                         </span>
                     </div>
@@ -275,7 +315,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                 <div class="flex items-center gap-3 sm:gap-4 shrink-0">
                     <!-- IIT Indore Logo -->
                     <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="block hover:scale-105 transition-transform" title="Indian Institute of Technology Indore">
-                        <img src="/assets/iiti_logo.jpg" alt="IIT Indore Logo" class="h-10 sm:h-11 w-auto object-contain bg-white p-1 rounded-lg border border-slate-200/20 shadow-sm">
+                        <img src="assets/iiti_logo.jpg" alt="IIT Indore Logo" class="h-9 sm:h-10.5 w-auto object-contain bg-white p-1 rounded-lg border border-slate-200/20 shadow-sm">
                     </a>
 
                     <!-- Google Translate Element -->
@@ -308,39 +348,39 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
             <!-- Hub Quick Navigation Row -->
             <div class="bg-slate-100/90 border-b border-slate-200 px-4 flex flex-wrap gap-1 md:gap-3 py-2 shadow-inner">
-                <button onclick="switchTab('home')" id="tab-btn-home" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
-                    <i data-lucide="home" class="h-3.5 w-3.5"></i>
+                <button onclick="switchTab('home')" id="tab-btn-home" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
+                    <i data-lucide="home" class="h-3.5 w-3.5 text-st-blue"></i>
                     Home
                 </button>
-                <button onclick="switchTab('news')" id="tab-btn-news" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-amber-600">
+                <button onclick="switchTab('news')" id="tab-btn-news" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-amber-600">
                     <i data-lucide="newspaper" class="h-3.5 w-3.5 text-amber-600"></i>
                     News & Announcements
                 </button>
-                <button onclick="switchTab('research')" id="tab-btn-research" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-orange">
+                <button onclick="switchTab('research')" id="tab-btn-research" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-orange">
                     <i data-lucide="cpu" class="h-3.5 w-3.5 text-st-orange"></i>
                     Research Areas
                 </button>
-                <button onclick="switchTab('people')" id="tab-btn-people" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
+                <button onclick="switchTab('people')" id="tab-btn-people" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
                     <i data-lucide="users" class="h-3.5 w-3.5 text-st-green"></i>
-                    Lab Members (People)
+                    Lab Members
                 </button>
-                <button onclick="switchTab('publications')" id="tab-btn-publications" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
+                <button onclick="switchTab('publications')" id="tab-btn-publications" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
                     <i data-lucide="book-open" class="h-3.5 w-3.5 text-st-blue"></i>
                     Key Publications
                 </button>
-                <button onclick="switchTab('learning')" id="tab-btn-learning" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
+                <button onclick="switchTab('learning')" id="tab-btn-learning" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
                     <i data-lucide="graduation-cap" class="h-3.5 w-3.5 text-st-green"></i>
                     Learning Resources
                 </button>
-                <button onclick="switchTab('gallery')" id="tab-btn-gallery" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
+                <button onclick="switchTab('gallery')" id="tab-btn-gallery" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue">
                     <i data-lucide="camera" class="h-3.5 w-3.5 text-st-blue"></i>
                     Lab Gallery
                 </button>
-                <button onclick="switchTab('weather')" id="tab-btn-weather" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-green">
                     <i data-lucide="cloud-sun" class="h-3.5 w-3.5 text-st-green"></i>
                     IITI Weather Statistics
                 </button>
-                <button onclick="switchTab('contact')" id="tab-btn-contact" class="flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-orange">
+                <button onclick="switchTab('contact')" id="tab-btn-contact" class="flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-orange">
                     <i data-lucide="phone" class="h-3.5 w-3.5 text-st-orange"></i>
                     Contact Lab
                 </button>
@@ -350,9 +390,11 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
             <div class="p-6 sm:p-8 min-h-[350px]">
                 
                 <!-- WELCOME PANE -->
-                <div id="pane-home" class="tab-pane hidden animate-tabFadeIn relative p-6 sm:p-10 rounded-2xl bg-cover bg-center overflow-hidden border border-slate-200/50 shadow-inner" style="background-image: url('/assets/stlab_background.svg');">
-                    <!-- Glassmorphic overlay background blur to ensure high contrast & legibility -->
-                    <div class="absolute inset-0 bg-[#f8fafc]/88 backdrop-blur-[2px] z-0"></div>
+                <div id="pane-home" class="tab-pane hidden animate-tabFadeIn relative p-6 sm:p-10 rounded-2xl overflow-hidden border border-slate-200/50 shadow-xs bg-white">
+                    <!-- STL Logo Theme Soft Glowing Accent Circles -->
+                    <div class="absolute -top-12 -right-12 w-64 h-64 bg-st-blue/3 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -bottom-16 -left-16 w-80 h-80 bg-st-orange/3 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute top-1/2 left-1/4 w-48 h-48 bg-st-green/2 rounded-full blur-2xl pointer-events-none"></div>
                     <div class="relative z-10 space-y-8 w-full">
                         <div class="bg-gradient-to-r from-st-blue/5 via-st-orange/10 to-st-blue/5 border border-st-orange/20 p-6 sm:p-7 rounded-2xl space-y-4 shadow-sm backdrop-blur-sm flex flex-col items-center justify-center text-center">
                         <h3 class="text-xl sm:text-2xl font-extrabold text-[#0c2340] tracking-tight leading-snug">
@@ -366,7 +408,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 देशोऽयं क्षोभरहितो ब्राह्मणाः सन्तु निर्भयाः॥
                             </p>
                             <div class="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent w-full"></div>
-                            <p class="text-xs sm:text-sm text-slate-755 italic text-center font-medium max-w-2xl mx-auto leading-relaxed">
+                            <p class="text-xs sm:text-sm text-slate-700 italic text-center font-medium max-w-2xl mx-auto leading-relaxed">
                                 "May the rains come on time, the earth be verdant, this country be free of distress and intellectuals be fearless."
                             </p>
                         </div>
@@ -380,7 +422,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <span class="hidden md:inline h-1.5 w-1.5 rounded-full bg-st-green"></span>
                         </div>
                         <div class="flex-1 overflow-hidden py-3 relative bg-slate-50/50 flex items-center">
-                            <div class="animate-marquee whitespace-nowrap flex items-center gap-12 text-xs font-semibold text-slate-700 select-none">
+                            <div class="animate-marquee whitespace-nowrap flex items-center gap-12 text-xs font-semibold text-slate-700 select-none" style="display: flex; width: max-content; gap: 3rem; animation: marquee 35s linear infinite;">
                                 <span class="flex items-center gap-2">
                                     <i data-lucide="award" class="h-4 w-4 text-st-orange shrink-0 animate-pulse"></i>
                                     <span><strong class="text-slate-900 uppercase tracking-wider text-[10px] font-extrabold bg-st-orange/10 text-st-orange px-1.5 py-0.5 rounded mr-1">Global Ranking</strong> Prof. Ganti S. Murthy has been ranked among the top 2% of scientists worldwide by Stanford University!</span>
@@ -393,7 +435,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 <span class="text-slate-300">|</span>
                                 <span class="flex items-center gap-2">
                                     <i data-lucide="graduation-cap" class="h-4 w-4 text-st-blue shrink-0"></i>
-                                    <span><strong class="text-slate-900 uppercase tracking-wider text-[10px] font-extrabold bg-st-blue/10 text-st-blue px-1.5 py-0.5 rounded mr-1">Chair</strong> Dr. Ganti S. Murthy serves as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore!</span>
+                                    <span><strong class="text-slate-900 uppercase tracking-wider text-[10px] font-extrabold bg-st-blue/10 text-st-blue px-1.5 py-0.5 rounded mr-1">Chair</strong> Prof. Ganti S. Murthy serves as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore!</span>
                                 </span>
                                 <span class="text-slate-300">|</span>
                                 <span class="flex items-center gap-2">
@@ -415,7 +457,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 <span class="text-slate-300">|</span>
                                 <span class="flex items-center gap-2">
                                     <i data-lucide="graduation-cap" class="h-4 w-4 text-st-blue shrink-0"></i>
-                                    <span><strong class="text-slate-900 uppercase tracking-wider text-[10px] font-extrabold bg-st-blue/10 text-st-blue px-1.5 py-0.5 rounded mr-1">Chair</strong> Dr. Ganti S. Murthy serves as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore!</span>
+                                    <span><strong class="text-slate-900 uppercase tracking-wider text-[10px] font-extrabold bg-st-blue/10 text-st-blue px-1.5 py-0.5 rounded mr-1">Chair</strong> Prof. Ganti S. Murthy serves as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore!</span>
                                 </span>
                                 <span class="text-slate-300">|</span>
                                 <span class="flex items-center gap-2">
@@ -439,20 +481,24 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 </p>
                             </div>
 
-                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4.5 space-y-3 mt-5 shadow-inner">
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 sm:p-7 space-y-3.5 mt-5 shadow-inner">
                                 <span class="text-[10px] uppercase tracking-wide text-st-blue font-extrabold block">Current Sponsoring & Funding partners</span>
                                 <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600">
-                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-205 shadow-2xs">
+                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
                                         <span class="h-1.5 w-1.5 rounded-full bg-st-green shrink-0"></span>
                                         <span>Department of Biotechnology (DBT), Govt. of India</span>
                                     </div>
-                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-205 shadow-2xs">
+                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
                                         <span class="h-1.5 w-1.5 rounded-full bg-st-orange shrink-0"></span>
                                         <span>Ministry of Education (MoE), India</span>
                                     </div>
-                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-205 shadow-2xs">
+                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
                                         <span class="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0"></span>
                                         <span>University Grant Commission (UGC)</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-st-blue shrink-0"></span>
+                                        <span>Adani Foundation, India</span>
                                     </div>
                                 </div>
                             </div>
@@ -471,20 +517,20 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             </div>
 
                             <!-- Academic PI Capsule Box -->
-                            <div class="bg-[#0c2340] rounded-xl p-4.5 text-white flex flex-col justify-between relative overflow-hidden shadow-md mt-5 min-h-40">
-                                <div class="space-y-3 z-10 relative">
+                            <div class="bg-[#0c2340] rounded-xl p-6 sm:p-7.5 text-white flex flex-col justify-between relative overflow-hidden shadow-md mt-5 min-h-40">
+                                <div class="space-y-3.5 z-10 relative">
                                     <span class="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-st-orange text-white">
                                         Principal Investigator
                                     </span>
                                     <div class="space-y-0.5">
-                                        <h4 class="text-base font-extrabold tracking-tight">Dr. Ganti S. Murthy</h4>
+                                        <h4 class="text-base font-extrabold tracking-tight">Prof. Ganti S. Murthy</h4>
                                         <p class="text-[11px] text-[#ffa34d] font-bold">Professor & Principal Investigator</p>
                                     </div>
                                     <p class="text-[11px] text-slate-300 leading-relaxed font-light">
                                         Professor at IITI BSBE Department, former tenured faculty member at Oregon State University, USA, spearheading food-energy-water nexus sustainability study cores.
                                     </p>
                                 </div>
-                                <div class="border-t border-white/10 pt-2.5 mt-3 text-[9px] text-slate-400 font-mono flex items-center gap-1.5 shrink-0">
+                                <div class="border-t border-white/10 pt-3 mt-3 text-[9px] text-slate-400 font-mono flex items-center gap-1.5 shrink-0">
                                     <i data-lucide="map-pin" class="h-3 w-3 text-st-orange"></i>
                                     <span>Helium Building (POD 1C), IIT Indore</span>
                                 </div>
@@ -499,7 +545,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             Useful & Affiliated Links
                         </h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-205 rounded-xl p-4 flex flex-col justify-between hover:border-st-orange/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
+                            <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-st-orange/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
                                 <div class="space-y-2">
                                     <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-st-orange border border-orange-100">
                                         <i data-lucide="globe" class="h-4 w-4"></i>
@@ -517,7 +563,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 </div>
                             </a>
 
-                            <a href="https://bsbe.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-205 rounded-xl p-4 flex flex-col justify-between hover:border-st-green/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
+                            <a href="https://bsbe.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-st-green/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
                                 <div class="space-y-2">
                                     <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-st-green border border-green-100">
                                         <i data-lucide="cpu" class="h-4 w-4"></i>
@@ -535,7 +581,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 </div>
                             </a>
 
-                            <a href="https://crdt.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-205 rounded-xl p-4 flex flex-col justify-between hover:border-st-orange/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
+                            <a href="https://crdt.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-st-orange/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
                                 <div class="space-y-2">
                                     <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-st-blue border border-sky-100">
                                         <i data-lucide="home" class="h-4 w-4"></i>
@@ -553,7 +599,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 </div>
                             </a>
 
-                            <a href="https://cisks.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-205 rounded-xl p-4 flex flex-col justify-between hover:border-amber-500/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
+                            <a href="https://cisks.iiti.ac.in/" target="_blank" rel="noopener noreferrer" class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:border-amber-500/60 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer">
                                 <div class="space-y-2">
                                     <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100">
                                         <i data-lucide="book-open" class="h-4 w-4"></i>
@@ -589,7 +635,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 View Floor Map
                                 <i data-lucide="arrow-right" class="h-3 w-3"></i>
                             </button>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Indian+Institute+of+Technology+Indore" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-md cursor-pointer transform hover:-translate-y-0.5">
+                            <a href="https://maps.app.goo.gl/EP3dxc4qz6pxHgyaA" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-md cursor-pointer transform hover:-translate-y-0.5">
                                 <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
                                 Google Maps Route
                             </a>
@@ -631,7 +677,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             onclick="switchNewsSubTab('archive')"
                             class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-transparent text-slate-400 hover:text-slate-600 font-medium"
                         >
-                            <span>Archive (2025)</span>
+                            <span>Archive (2024/2025)</span>
                             <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-transparent indicator"></span>
                         </button>
                     </div>
@@ -662,14 +708,76 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <h4 class="text-lg sm:text-xl font-extrabold text-[#0c2340] leading-snug group-hover:text-st-orange transition-colors">
                                             Best Idea Presentation Competition 2026!
                                         </h4>
-                                        <p class="text-xs text-slate-650 mt-1.5 leading-relaxed font-light">
-                                            We are proud to share that STL Lab members <span class="font-bold text-slate-805">Abhishek D Kalbande (First Prize)</span> and <span class="font-bold text-slate-805">Buddhodev Ghosh (Joint-Second Prize)</span> were winners at the Best Idea Presentation Competition.
+                                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed font-light">
+                                            We are proud to share that STL Lab members <span class="font-bold text-slate-800">Abhishek D Kalbande (First Prize)</span> and <span class="font-bold text-slate-800">Buddhodev Ghosh (Joint-Second Prize)</span> were winners at the Best Idea Presentation Competition.
                                         </p>
                                     </div>
                                     <div class="p-4 bg-white/70 border border-st-orange/15 rounded-xl text-xs text-slate-700 leading-relaxed font-light">
                                         The competition was jointly organized by the <span class="font-semibold text-[#0c2340]">Centre for Rural Development and Technology (CRDT)</span> and the <span class="font-semibold text-[#0c2340]">Centre for Indian Scientific Knowledge System (CISKS)</span> at IIT Indore in celebration of <span class="font-bold text-st-blue">National Youth Day (Rashtriya Yuva Diwas)</span> on 12 January 2026. This outstanding double win signals STLab's prominent voice in translational solutions and indigenous science.
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- News: Youth for Social Change Summit 2026 -->
+                        <div class="bg-white border border-slate-200/80 hover:border-st-orange/50 rounded-2xl p-6 shadow-xs hover:shadow-lg transition-all duration-300 relative overflow-hidden group flex flex-col justify-between">
+                            <div class="absolute top-0 right-0 h-24 w-24 bg-gradient-to-br from-st-orange/5 to-transparent rounded-bl-full pointer-events-none"></div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-start">
+                                    <div class="p-3 bg-st-blue/5 rounded-xl text-st-blue border border-st-blue/10 flex items-center justify-center font-bold">
+                                        <i data-lucide="users" class="h-5 w-5"></i>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-slate-400 font-mono">
+                                        Year 2026
+                                    </span>
+                                </div>
+                                <div class="space-y-2">
+                                    <span class="px-2 py-0.5 bg-st-blue/5 border border-st-blue/20 rounded-md text-[9px] font-bold text-st-blue uppercase tracking-wider">
+                                        Social Innovation Laurels
+                                    </span>
+                                    <h4 class="text-base font-bold text-slate-900 group-hover:text-st-orange transition-colors">
+                                        Youth for Social Change Summit 2026
+                                    </h4>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-sans font-light">
+                                        We are thrilled to state that <span class="font-bold text-slate-800">Buddhodev Ghosh</span>, representing the <span class="font-semibold text-slate-800">CRDT-IITI team</span>, secured the prestigious <span class="font-bold text-st-orange">Third Runner-Up position</span> in the Grand Finale of the summit held at Devi Ahilyabai University (DAVV), Indore.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 mt-4 text-[11px] text-slate-500 flex items-center gap-1.5 font-sans justify-between">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="sparkles" class="h-3 w-3 text-amber-500"></i>
+                                    <span>Awarded with a cash prize.</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- News: Dagguganta PhD Senator Re-election -->
+                        <div class="bg-white border border-slate-200/80 hover:border-st-orange/50 rounded-2xl p-6 shadow-xs hover:shadow-lg transition-all duration-300 relative overflow-hidden group flex flex-col justify-between">
+                            <div class="absolute top-0 right-0 h-24 w-24 bg-gradient-to-br from-st-orange/5 to-transparent rounded-bl-full pointer-events-none"></div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-start">
+                                    <div class="p-3 bg-st-orange/5 rounded-xl text-st-orange border border-st-orange/10 flex items-center justify-center font-bold">
+                                        <i data-lucide="graduation-cap" class="h-5 w-5"></i>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-slate-400 font-mono">
+                                        Year 2026
+                                    </span>
+                                </div>
+                                <div class="space-y-2">
+                                    <span class="px-2 py-0.5 bg-st-orange/5 border border-st-orange/20 rounded-md text-[9px] font-bold text-st-orange uppercase tracking-wider">
+                                        Senate Leadership
+                                    </span>
+                                    <h4 class="text-base font-bold text-slate-900 group-hover:text-st-orange transition-colors">
+                                        Institute PhD Senator Re-election
+                                    </h4>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-sans font-light">
+                                        Hearty congratulations to <span class="font-bold text-slate-800">Dagguganta Mohan Chaitanya Reddy</span> for being elected as the <span class="font-semibold text-slate-800">Institute PhD Senator</span> at IIT Indore for the <span class="font-bold text-st-blue">second consecutive year</span>!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 mt-4 text-[11px] text-slate-500 flex items-center gap-1.5 font-sans">
+                                <i data-lucide="megaphone" class="h-3 w-3 text-amber-500"></i>
+                                <span>Selected via direct student franchise to represent doctoral scholars.</span>
                             </div>
                         </div>
 
@@ -697,7 +805,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                             Prof. Ganti S. Murthy (Lab PI) Ranked Among Top 2% Scientists Worldwide
                                         </h4>
                                         <p class="text-xs text-slate-605 mt-1.5 leading-relaxed font-light">
-                                            We are thrilled to share that our Principal Investigator, <span class="font-bold text-slate-800">Prof. Ganti Suryanarayana Murthy</span>, has achieved tremendous global recognition by being featured in the highly prestigious <span class="font-semibold text-[#0c2340]">Stanford-Elsevier ranking</span>, which lists the top 2% of scientists globally based on standardized citation indicators.
+                                            We are thrilled to share that our Principal Investigator, <span class="font-bold text-slate-800">Prof. Ganti Suryanarayana Murthy</span>, is featured in the highly prestigious <span class="font-semibold text-[#0c2340]">Stanford-Elsevier ranking</span>, which lists the top 2% of scientists globally based on standardized citation indicators. This is a recognitions of the work of all STL Team members over years.
                                         </p>
                                     </div>
                                     <div class="p-4 bg-white/70 border border-st-orange/15 rounded-xl text-xs text-slate-700 leading-relaxed font-light">
@@ -889,6 +997,119 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             </div>
                         </div>
 
+                        <!-- News New Archived: Buddhodev Ghosh Presentation Award at Adani Global Indology Conclave -->
+                        <div class="bg-white border border-slate-200/80 hover:border-amber-500/50 rounded-2xl p-6 shadow-xs hover:shadow-lg transition-all duration-300 md:col-span-2 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 h-32 w-32 bg-gradient-to-br from-amber-500/5 to-transparent rounded-bl-full pointer-events-none transition-all group-hover:scale-110"></div>
+                            <div class="flex flex-col sm:flex-row gap-5 items-start font-sans">
+                                <div class="p-3 bg-amber-50 rounded-xl text-amber-600 shrink-0 border border-amber-100 flex items-center justify-center shadow-inner animate-float-3d">
+                                    <i data-lucide="award" class="h-6 w-6"></i>
+                                </div>
+                                <div class="space-y-3 flex-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2 py-0.5 bg-amber-50 border border-amber-200 rounded-md text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                                            Poster Presentation Award
+                                        </span>
+                                        <span class="px-2.5 py-0.5 bg-[#0c2340] text-white rounded-md text-[10px] font-extrabold uppercase tracking-wider">
+                                            Adani Global Indology Conclave
+                                        </span>
+                                        <span class="text-[11px] font-semibold text-slate-500 font-mono">
+                                            Year 2025 Archive
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
+                                            Buddhodev Ghosh Secures 3rd Best Presentation in PG-PhD Segment
+                                        </h4>
+                                        <p class="text-xs text-slate-800 font-semibold mt-1">
+                                            Research Work: <span class="italic">"Mathematical Combinatorics in Gandhārṇva Perfume-Making: A Critical Study from Bṛhatsaṃhitā"</span>
+                                        </p>
+                                    </div>
+                                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-600 leading-relaxed font-light">
+                                        From approximately <span class="font-semibold text-slate-800">500 national-level entries</span>, Buddhodev Ghosh's innovative mathematical reconstruction of traditional Sanskrit treatises was selected for the finals (under 100 final participants). He successfully pitched his research at the Poster Presentation Competition of the <span class="font-semibold text-slate-800">Adani Global Indology Conclave</span>, winning the prestigious <span class="font-bold text-amber-700">Third-Best Presentation Award</span> in the competitive PG-PhD category.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Archived: Mr. Abhishek D. Kalbande Merit Cum Means Scholarship -->
+                        <div class="bg-white border border-slate-200/80 hover:border-amber-500/50 rounded-2xl p-6 shadow-xs hover:shadow-lg transition-all duration-300 md:col-span-2 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 h-32 w-32 bg-gradient-to-br from-amber-500/5 to-transparent rounded-bl-full pointer-events-none transition-all group-hover:scale-110"></div>
+                            <div class="flex flex-col sm:flex-row gap-5 items-start font-sans">
+                                <div class="p-3 bg-amber-50 rounded-xl text-amber-600 shrink-0 border border-amber-100 flex items-center justify-center shadow-inner animate-float-3d">
+                                    <i data-lucide="award" class="h-6 w-6"></i>
+                                </div>
+                                <div class="space-y-3 flex-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2 py-0.5 bg-amber-50 border border-amber-200 rounded-md text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                                            Merit Cum Means Scholarship
+                                        </span>
+                                        <span class="px-2.5 py-0.5 bg-[#0c2340] text-white rounded-md text-[10px] font-extrabold uppercase tracking-wider">
+                                            Dept. of BSBE, IIT Indore
+                                        </span>
+                                        <span class="text-[11px] font-semibold text-slate-500 font-mono">
+                                            Year 2025 Archive
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
+                                            Mr. Abhishek D. Kalbande Awarded Merit Cum Means Scholarship
+                                        </h4>
+                                        <p class="text-xs text-slate-600 leading-relaxed font-sans font-light mt-1.5">
+                                            Congratulations to <span class="font-bold text-slate-800">Abhishek D. Kalbande</span> for being selected for the prestigious <span class="font-semibold text-[#0c2340]">Merit Cum Means (MCM) Scholarship</span> awarded by the <span class="font-semibold text-slate-800">Department of Biosciences and Biomedical Engineering (BSBE), IIT Indore</span> in 2025.
+                                        </p>
+                                    </div>
+                                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-600 leading-relaxed font-light">
+                                        This merit-based honor reflects academic distinction, dedication to research, and outstanding performance within the Department of BSBE at IIT Indore.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Archived: Dagguganta Mohanchaitanya Reddy Elected Head of Biocrats Club -->
+                        <div class="bg-white border border-slate-200/80 hover:border-amber-500/50 rounded-2xl p-6 shadow-xs hover:shadow-lg transition-all duration-300 md:col-span-2 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 h-32 w-32 bg-gradient-to-br from-amber-500/5 to-transparent rounded-bl-full pointer-events-none transition-all group-hover:scale-110"></div>
+                            <div class="flex flex-col sm:flex-row gap-5 items-start font-sans">
+                                <div class="p-3 bg-amber-50 rounded-xl text-amber-600 shrink-0 border border-amber-100 flex items-center justify-center shadow-inner animate-float-3d">
+                                    <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+                                </div>
+                                <div class="space-y-3 flex-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2 py-0.5 bg-amber-50 border border-amber-200 rounded-md text-[10px] font-bold text-amber-700 uppercase tracking-wider font-sans">
+                                            Club Leadership
+                                        </span>
+                                        <span class="px-2.5 py-0.5 bg-[#0c2340] text-white rounded-md text-[10px] font-extrabold uppercase tracking-wider font-sans">
+                                            Biocrats Club
+                                        </span>
+                                        <span class="text-[11px] font-semibold text-slate-500 font-mono">
+                                            Year 2024 Archive
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base sm:text-lg font-extrabold text-[#0c2340] group-hover:text-amber-700 transition-colors font-sans">
+                                            Dagguganta Mohan Chaitanya Reddy Elected Head of Biocrats Club
+                                        </h4>
+                                        <p class="text-xs text-slate-600 leading-relaxed font-sans font-light mt-1.5 font-sans">
+                                            Heartiest congratulations to <span class="font-semibold text-slate-800">Dagguganta Mohan Chaitanya Reddy</span> for being elected as the Student Coordinator / Head of <span class="font-semibold text-[#0c2340]">Biocrats</span>—the prestigious Departmental Club of Bioscience and Biomedical Engineering (BSBE) at IIT Indore.
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-slate-100 mt-2">
+                                        <div class="p-3 bg-slate-50 border border-slate-100/50 rounded-xl text-xs text-slate-600 leading-relaxed font-light flex-1 font-sans">
+                                            The BSBE Departmental Club <span class="font-semibold text-slate-700">Biocrats</span> fosters innovation, collaborative research, and co-curricular enrichment among the bioscience community at IIT Indore.
+                                        </div>
+                                        <a 
+                                            href="https://biocrats.iiti.ac.in/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="px-3 py-2 bg-slate-100 hover:bg-[#0c2340] hover:text-white transition-all text-[11px] font-black rounded-lg text-slate-600 border border-slate-200 cursor-pointer flex items-center gap-1 shrink-0 self-end sm:self-center font-sans"
+                                        >
+                                            <span>Biocrats Website</span>
+                                            <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <script>
@@ -935,19 +1156,19 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                         </p>
 
                         <!-- OSU150 YouTube hook box -->
-                        <div class="bg-white border-2 border-st-orange/20 rounded-xl p-4.5 mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm hover:border-st-orange/40 transition-colors">
-                            <div class="flex gap-3.5 items-center">
+                        <div class="bg-white border-2 border-st-orange/20 rounded-xl p-6 sm:p-7.5 mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm hover:border-st-orange/40 transition-colors">
+                            <div class="flex gap-4 items-center">
                                 <div class="h-11 w-11 rounded-lg bg-st-orange/10 flex items-center justify-center border border-st-orange/20 text-st-orange shrink-0">
                                     <i data-lucide="play" class="h-5 w-5 text-st-orange"></i>
                                 </div>
                                 <div>
                                     <h4 class="text-xs font-extrabold text-[#0c2340] uppercase tracking-wide">Overview Presentation</h4>
                                     <p class="text-slate-600 text-xs mt-0.5 leading-relaxed">
-                                        For a comprehensive summary of our foundational research philosophy, watch our <span class="font-bold text-[#0c2340]">OSU150 Celebrations Talk (2018)</span>.
+                                        For a comprehensive summary of our foundational research philosophy, watch our <span class="font-bold text-[#0c2340]">systems approach overview talk</span>.
                                     </p>
                                 </div>
                             </div>
-                            <a href="https://www.youtube.com/results?search_query=Ganti+S.+Murthy+OSU150+Celebrations+Talk+2018" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-md shrink-0 cursor-pointer">
+                            <a href="https://www.youtube.com/watch?v=b965BddtPkE" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-md shrink-0 cursor-pointer">
                                 Watch Talk
                                 <i data-lucide="external-link" class="h-3 w-3"></i>
                             </a>
@@ -963,12 +1184,12 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         
                         <!-- Col 1: Sustainable Tech -->
-                        <div class="bg-white border border-slate-200 hover:border-st-orange/30 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
+                        <div class="bg-white border border-slate-200 hover:border-st-orange/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
                             <div class="flex items-center gap-3">
                                 <div class="p-2.5 bg-st-orange/10 text-st-orange rounded-xl border border-st-orange/15 shadow-inner">
                                     <i data-lucide="zap" class="h-5 w-5"></i>
                                 </div>
-                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug uppercase">
+                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug">
                                     Sustainable Technologies Development
                                 </h4>
                             </div>
@@ -976,105 +1197,93 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <ul class="space-y-3.5 flex-1 text-xs text-slate-600">
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
-                                    <span>Design and implement bioprocess control systems.</span>
+                                    <span>Design and scaleup of bioprocesses in food, nutraceutical and pharmaceutical sectors.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
-                                    <span>Integrate wastewater treatment with algae production to reduce overall production costs.</span>
+                                    <span>Model, optimize, and control bioprocesses.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
-                                    <span>Evaluate the use of algae in bioremediation applications.</span>
+                                    <span>Develop strategies for high-solid fermentation of pretreated cellulosic biomass.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">4</span>
-                                    <span>Develop novel strategies for the hydrothermal liquefaction of wet micro-algal biomass.</span>
+                                    <span>Develop novel strategies for the hydrothermal liquefaction of biomass.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">5</span>
-                                    <span>Formulate novel strategies for utilizing algal biomass as aquatic feed ingredients.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">6</span>
-                                    <span>Model, optimize, and control the enzymatic hydrolysis of cellulose.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-orange/10 text-st-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">7</span>
-                                    <span>Develop strategies for high-solid fermentation of pretreated cellulosic biomass.</span>
+                                    <span>Evaluate the use of microbial consortia in bioremediation applications.</span>
                                 </li>
                             </ul>
                         </div>
 
                         <!-- Col 2: Engineering Systems -->
-                        <div class="bg-white border border-slate-200 hover:border-st-blue/30 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
+                        <div class="bg-white border border-slate-200 hover:border-st-blue/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
                             <div class="flex items-center gap-3">
                                 <div class="p-2.5 bg-st-blue/10 text-st-blue rounded-xl border border-st-blue/15 shadow-inner">
                                     <i data-lucide="trending-up" class="h-5 w-5"></i>
                                 </div>
-                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug uppercase">
-                                    Engineering Systems Analysis
+                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug">
+                                    Engineered Systems Analysis
                                 </h4>
                             </div>
                             <div class="h-px bg-slate-100"></div>
                             <ul class="space-y-3.5 flex-1 text-xs text-slate-600">
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
-                                    <span>Conduct comprehensive, integrated techno-economic analyses (TEA) and life cycle assessments (LCA) of biofuels and bioproducts.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
-                                    <span>Understand the resilience of global food networks through rigorous systems analysis.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
                                     <span>Engineer and analyze resilient agroecological systems.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
+                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                                    <span>Conduct comprehensive, integrated techno-economic analyses (TEA) and life cycle assessments (LCA) of biofuels and bioproducts.</span>
+                                </li>
+                                <li class="flex gap-2.5 items-start">
+                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                                    <span>Understand the resilience of global food networks through systems analysis.</span>
+                                </li>
+                                <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">4</span>
-                                    <span>Study carbon partitioning in algae under various regimes, conditions, and nutrient profiles.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">5</span>
-                                    <span>Develop control systems for the automated management of algal cultures.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">6</span>
                                     <span>Identify metabolic network bottlenecks for xylose utilization in Saccharomyces cerevisiae.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">7</span>
+                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">5</span>
                                     <span>Quantify and understand key sources of uncertainty in the LCA of biofuels and bioproducts.</span>
+                                </li>
+                                <li class="flex gap-2.5 items-start">
+                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">6</span>
+                                    <span>Perform realistic assessments of bioprocess technologies under diverse future scenarios.</span>
+                                </li>
+                                <li class="flex gap-2.5 items-start">
+                                    <span class="h-5 w-5 rounded-md bg-st-blue/10 text-st-blue flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">7</span>
+                                    <span>Study carbon partitioning in algae under various growth regimes, environmental conditions, and nutrient profiles.</span>
                                 </li>
                             </ul>
                         </div>
 
                         <!-- Col 3: IKS & Rural Tech -->
-                        <div class="bg-white border border-slate-200 hover:border-st-green/30 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
+                        <div class="bg-white border border-slate-200 hover:border-st-green/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm flex flex-col hover:shadow-md duration-300 transition-all">
                             <div class="flex items-center gap-3">
                                 <div class="p-2.5 bg-st-green/10 text-st-green rounded-xl border border-st-green/15 shadow-inner">
                                     <i data-lucide="sprout" class="h-5 w-5"></i>
                                 </div>
-                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug uppercase">
-                                    Indian Knowledge Systems & Rural Tech
+                                <h4 class="text-xs font-extrabold text-[#0c2340] tracking-tight leading-snug">
+                                    Indian Knowledge Systems
                                 </h4>
                             </div>
                             <div class="h-px bg-slate-100"></div>
                             <ul class="space-y-3.5 flex-1 text-xs text-slate-600">
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-green/10 text-st-green flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
-                                    <span>Investigate Traditional Ecological Knowledge (TEK) and Indian Knowledge Systems (IKS) to inform modern climate resilience and resource management.</span>
+                                    <span>Bridge traditional Indian agricultural practices with modern agroecological engineering to enhance agro-ecological system health, food and water security and resilience.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-green/10 text-st-green flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
-                                    <span>Analyze the Indian scientific knowledge tradition, integrating principles from Indian astronomy and historical meteorological methods.</span>
+                                    <span>Analyze the Indian scientific knowledge tradition, integrating principles from Indian astronomy and historical meteorological methods into contemporary analytical frameworks.</span>
                                 </li>
                                 <li class="flex gap-2.5 items-start">
                                     <span class="h-5 w-5 rounded-md bg-st-green/10 text-st-green flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
-                                    <span>Bridge traditional Indian agricultural practices with modern agroecological engineering to enhance food and water security.</span>
-                                </li>
-                                <li class="flex gap-2.5 items-start">
-                                    <span class="h-5 w-5 rounded-md bg-st-green/10 text-st-green flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">4</span>
-                                    <span>Develop frameworks for rural development and technology by translating traditional algorithmic wisdom into actionable, sustainable solutions.</span>
+                                    <span>Investigate traditional ecological knowledge (TEK) in Indian Knowledge Systems (IKS) to inform modern climate resilience and resource management.</span>
                                 </li>
                             </ul>
                         </div>
@@ -1082,7 +1291,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     </div>
 
                     <!-- Current Projects Section -->
-                    <div class="space-y-4 pt-6 mt-4 border-t border-slate-150">
+                    <div class="space-y-4 pt-6 mt-4 border-t border-slate-200">
                         <div class="space-y-1.5">
                             <h3 class="text-lg sm:text-xl font-extrabold text-[#0c2340] tracking-tight uppercase">Current Projects</h3>
                             <p class="text-xs text-slate-500 font-sans">Active research investigations, theoretical modeling, and experimental trials currently underway at STLab.</p>
@@ -1095,7 +1304,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-st-green/10 text-st-green rounded-lg border border-st-green/15">
                                             <i data-lucide="sprout" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Herbal Kunapajala</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Plant-microbiome-soil</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
                                         Investigating and standardising the preparation of Kunapajala (a traditional Indian liquid bio-fertiliser) to enhance sustainable agricultural practices.
@@ -1109,7 +1318,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-st-orange/10 text-st-orange rounded-lg border border-st-orange/15">
                                             <i data-lucide="cpu" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Bioreactor-Based Systems</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Bioprocess scaleup and control</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
                                         Designing, modeling, and optimizing bioreactor systems for advanced bioprocessing and sustainable technology applications.
@@ -1123,7 +1332,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-st-blue/10 text-st-blue rounded-lg border border-st-blue/15">
                                             <i data-lucide="atom" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Traditional Pesticides</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Pest management using IKS approaches</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
                                         Formulating and evaluating traditional, plant-based pesticide formulations for eco-friendly and sustainable pest management.
@@ -1137,10 +1346,10 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-slate-100 text-slate-600 rounded-lg border border-slate-200">
                                             <i data-lucide="layers" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Sustainable Non-Stick</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Toxicity of non-stick cookware under Indian cooking conditions</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
-                                        Developing novel non-stick and anti-fouling surface technologies for engineering and bioprocess applications.
+                                        Analysis, Characterization and In-Vitro Toxicity Evaluation of By-products from Teflon Coated Cookware Under Cooking Temperature Conditions.
                                     </p>
                                 </div>
                             </div>
@@ -1151,10 +1360,10 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-sky-50 text-sky-600 rounded-lg border border-sky-100">
                                             <i data-lucide="database" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Octal Water Tank Modelling</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Hexadic Tank Modeling</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
-                                        Developing and implementing advanced process control strategies and theoretical simulations utilising an octal water tank environment.
+                                        Developing and implementing advanced process control strategies and theoretical simulations utilising an hexadic tank system.
                                     </p>
                                 </div>
                             </div>
@@ -1165,10 +1374,38 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="p-2 bg-amber-50 text-amber-600 rounded-lg border border-amber-100">
                                             <i data-lucide="globe" class="h-4.5 w-4.5"></i>
                                         </div>
-                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Rainfall Models in IKS</h4>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Rainfall Models of Bharat</h4>
                                     </div>
                                     <p class="text-xs text-slate-600 leading-relaxed font-sans">
-                                        Analysing algorithmic frameworks and ethno-mathematics from Indian Knowledge Systems (IKS) for historical meteorological forecasting and rainfall prediction.
+                                        Analysing algorithmic and observational frameworks in Indian Knowledge Systems (IKS) for understanding and improving the rainfall prediction methods.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-white to-slate-50/50 border border-slate-200 hover:border-emerald-300 rounded-xl p-5 hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:-translate-y-0.5 duration-300">
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100">
+                                            <i data-lucide="sliders" class="h-4.5 w-4.5"></i>
+                                        </div>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">Design and fabrication of low-cost automated FPLC system</h4>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                        Integrating low-cost fluidics, custom microcontrollers, and automated valve control to build a high-performance, budget-friendly FPLC unit.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-white to-slate-50/50 border border-slate-200 hover:border-rose-300 rounded-xl p-5 hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:-translate-y-0.5 duration-300">
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2 bg-rose-50 text-rose-600 rounded-lg border border-rose-100">
+                                            <i data-lucide="activity" class="h-4.5 w-4.5"></i>
+                                        </div>
+                                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-tight">IR-Based Glucose Sensing and Closed-Loop Insulin Delivery System</h4>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                                        Design and development of a single-site dual-port minimally invasive device for continuous glucose monitoring and a closed-loop system for personalised insulin delivery pump.
                                     </p>
                                 </div>
                             </div>
@@ -1179,8 +1416,43 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                 <!-- PEOPLE PANE -->
                 <div id="pane-people" class="tab-pane hidden space-y-8 animate-tabFadeIn">
                     
-                    <!-- Director Profile Box (Bento Board Presentation) -->
-                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-bold text-slate-800">Sustainable Technologies Lab Roster</h3>
+                        <p class="text-xs text-slate-500">List of researchers, Principal Investigator, and alumni of STLab.</p>
+                    </div>
+
+                    <!-- Parallel sub-tabs: Principal Investigator VS Active Researchers VS STLab Alumni -->
+                    <div class="flex border-b border-slate-200 gap-1 sm:gap-2">
+                        <button 
+                            id="people-subtab-pi"
+                            onclick="switchPeopleSubTab('pi')"
+                            class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-st-orange text-[#0c2340] font-extrabold"
+                        >
+                            <span>Principal Investigator (PI)</span>
+                            <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-st-orange indicator"></span>
+                        </button>
+                        <button 
+                            id="people-subtab-scholars"
+                            onclick="switchPeopleSubTab('scholars')"
+                            class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-transparent text-slate-400 hover:text-slate-600 font-medium"
+                        >
+                            <span>Active Researchers</span>
+                            <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-transparent indicator"></span>
+                        </button>
+                        <button 
+                            id="people-subtab-alumni"
+                            onclick="switchPeopleSubTab('alumni')"
+                            class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-transparent text-slate-400 hover:text-slate-600 font-medium"
+                        >
+                            <span>STLab Alumni</span>
+                            <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-transparent indicator"></span>
+                        </button>
+                    </div>
+
+                    <!-- Container 1: PI -->
+                    <div id="people-container-pi" class="space-y-6">
+                        <!-- Director Profile Box (Bento Board Presentation) -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
                         
                         <!-- Header Profile Info Card -->
                         <div class="flex flex-col md:flex-row gap-6 items-start md:items-center bg-gradient-to-r from-st-blue/5 to-transparent p-5 rounded-xl border border-slate-200 shadow-xs">
@@ -1188,8 +1460,8 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <!-- PI Photo Frame with Dual Fallback support -->
                             <div class="h-32 w-32 md:h-36 md:w-36 rounded-2xl bg-[#072138] border-2 border-st-orange/30 overflow-hidden shadow-md shrink-0 relative group flex items-center justify-center">
                                 <img 
-                                    src="/assets/ganti_murthy.jpeg" 
-                                    alt="Dr. Ganti Suryanarayana Murthy"
+                                    src="assets/ganti_murthy.jpeg" 
+                                    alt="Prof. Ganti Suryanarayana Murthy"
                                     class="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
                                     id="director-photo-php"
                                     onerror="this.style.display='none'; document.getElementById('director-fallback-php').classList.remove('hidden');"
@@ -1209,7 +1481,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         Principal Investigator
                                     </span>
                                     <h3 class="text-2xl font-extrabold text-[#0d56a6] tracking-tight">
-                                        Dr. Ganti Suryanarayana Murthy
+                                        Prof. Ganti Suryanarayana Murthy
                                     </h3>
                                     <p class="text-sm font-bold text-slate-800 leading-snug">
                                         Chair Professor, MFS-Bio Sciences and Biomedical Engineering
@@ -1278,13 +1550,9 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                             <i data-lucide="globe" class="h-3 w-3 shrink-0"></i>
                                             <span>ResearchGate</span>
                                         </a>
-                                        <a href="https://x.com/ganti_dr" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 text-[10.5px] font-bold text-st-blue bg-neutral-100 hover:bg-[#0c2340] hover:text-white border border-slate-200 hover:border-transparent rounded-md transition-all cursor-pointer">
-                                            <i data-lucide="info" class="h-3 w-3 shrink-0"></i>
-                                            <span>X Handle</span>
-                                        </a>
-                                        <a href="https://www.scirp.org/journal/detailedInforofeditorialboard?personid=10347" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 text-[10.5px] font-bold text-st-blue bg-neutral-100 hover:bg-[#0c2340] hover:text-white border border-slate-200 hover:border-transparent rounded-md transition-all cursor-pointer">
+                                        <a href="https://www.sciencedirect.com/journal/bioresource-technology/about/editorial-board" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 text-[10.5px] font-bold text-st-blue bg-neutral-100 hover:bg-[#0c2340] hover:text-white border border-slate-200 hover:border-transparent rounded-md transition-all cursor-pointer">
                                             <i data-lucide="globe" class="h-3 w-3 shrink-0"></i>
-                                            <span>Journal Editorial Board</span>
+                                            <span>Bioresource Technology Board</span>
                                         </a>
                                         <a href="https://bee.oregonstate.edu/users/ganti-murthy" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 text-[10.5px] font-bold text-st-blue bg-neutral-100 hover:bg-[#0c2340] hover:text-white border border-slate-200 hover:border-transparent rounded-md transition-all cursor-pointer">
                                             <i data-lucide="globe" class="h-3 w-3 shrink-0"></i>
@@ -1306,8 +1574,8 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         About & Philosophy
                                     </h4>
                                     <div class="space-y-3 text-xs text-slate-600 leading-relaxed font-sans">
-                                        <p>Dr. Ganti S. Murthy bridges the gap between advanced bioprocess engineering, sustainable systems analysis, and the rich heritage of Indian Knowledge Systems (IKS). With over 15 years of academic leadership at Oregon State University and currently serving as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore, his work spans the food-energy-water nexus, techno-economic life cycle assessments, and the modernization of traditional Indian agricultural and mathematical frameworks.</p>
-                                        <p>In addition to his academic research, Dr. Murthy is deeply involved in national policy as the National Coordinator for the IKS Division under the Ministry of Education, Govt. of India. He is also an active entrepreneur, having co-founded both GRW Engineering LLC and Leachate Treatment Systems to commercialize sustainable effluent-treatment technologies developed in academic labs.</p>
+                                        <p>Prof. Ganti S. Murthy bridges the gap between advanced bioprocess engineering, sustainable systems analysis, and the rich heritage of Indian Knowledge Systems (IKS). With over 15 years of academic leadership at Oregon State University and currently serving as the prestigious Adani Indology Chair Professor (Agriculture) at IIT Indore, his work spans the food-energy-water nexus, techno-economic life cycle assessments, and the modernization of traditional Indian agricultural and mathematical frameworks.</p>
+                                        <p>In addition to his academic research, Prof. Murthy is deeply involved in national policy as the National Coordinator for the IKS Division under the Ministry of Education, Govt. of India. He is also an active entrepreneur, having co-founded both GRW Engineering LLC and Leachate Treatment Systems to commercialize sustainable effluent-treatment technologies developed in academic labs.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1434,7 +1702,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                                 <span class="font-bold text-slate-900 leading-tight">Co-Founder, CEO & Chairman</span>
                                                 <span class="text-[9.5px] text-slate-400 font-mono shrink-0">Dec 2019 – Aug 2025</span>
                                             </div>
-                                            <p class="text-[11px] text-slate-650 font-medium">GRW Engineering LLC, Corvallis, OR</p>
+                                            <p class="text-[11px] text-slate-600 font-medium">GRW Engineering LLC, Corvallis, OR</p>
                                             <p class="text-[10.5px] text-slate-500 italic leading-snug mt-1 border-t border-dashed border-slate-100 pt-1">
                                                 Commercialized biological filtrate systems for landfill waste effluent.
                                             </p>
@@ -1444,7 +1712,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                                 <span class="font-bold text-slate-900 leading-tight">Software Engineer</span>
                                                 <span class="text-[9.5px] text-slate-400 font-mono shrink-0">2003</span>
                                             </div>
-                                            <p class="text-[11px] text-slate-650 font-medium">Tata Consultancy Services</p>
+                                            <p class="text-[11px] text-slate-600 font-medium">Tata Consultancy Services</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1594,28 +1862,28 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                         <div class="flex gap-2 items-start">
                                             <span class="h-1.5 w-1.5 bg-st-green rounded-full mt-1.5 shrink-0"></span>
                                             <div class="flex-1">
-                                                <span class="font-bold text-slate-805 leading-tight">BSE 624: Bioprocess Engineering & Technology</span>
+                                                <span class="font-bold text-slate-800 leading-tight">BSE 624: Bioprocess Engineering & Technology</span>
                                                 <p class="text-[10px] text-slate-550">Core postgraduate/doctoral curriculum covering reaction kinetics, upstream processes, and scale-up dynamics at IIT Indore.</p>
                                             </div>
                                         </div>
                                         <div class="flex gap-2 items-start">
                                             <span class="h-1.5 w-1.5 bg-st-green rounded-full mt-1.5 shrink-0"></span>
                                             <div class="flex-1">
-                                                <span class="font-bold text-slate-805 leading-tight">BEE 472/572: Ecological Engineering Design</span>
+                                                <span class="font-bold text-slate-800 leading-tight">BEE 472/572: Ecological Engineering Design</span>
                                                 <p class="text-[10px] text-slate-550">Signature senior design course at Oregon State University combining ecosystem kinetics, thermodynamics, and physical design principles.</p>
                                             </div>
                                         </div>
                                         <div class="flex gap-2 items-start">
                                             <span class="h-1.5 w-1.5 bg-st-green rounded-full mt-1.5 shrink-0"></span>
                                             <div class="flex-1">
-                                                <span class="font-bold text-slate-805 leading-tight">BEE 482/582: Ecological Systems Analysis</span>
+                                                <span class="font-bold text-slate-800 leading-tight">BEE 482/582: Ecological Systems Analysis</span>
                                                 <p class="text-[10px] text-slate-550">Pioneering course developed at OSU addressing cradle-to-grave life cycle impacts (LCA), techno-economics (TEA), and process carbon accounting.</p>
                                             </div>
                                         </div>
                                         <div class="flex gap-2 items-start">
                                             <span class="h-1.5 w-1.5 bg-st-green rounded-full mt-1.5 shrink-0"></span>
                                             <div class="flex-1">
-                                                <span class="font-bold text-slate-805 leading-tight">Indian Knowledge Systems (IKS) & Scientific Foundations</span>
+                                                <span class="font-bold text-slate-800 leading-tight">Indian Knowledge Systems (IKS) & Scientific Foundations</span>
                                                 <p class="text-[10px] text-slate-550">State-level and AICTE reference curriculum mapping ancient Indian agronomy, mathematics, forestation, and water management standards into modern ecological curricula.</p>
                                             </div>
                                         </div>
@@ -1732,19 +2000,16 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             </div>
                         </div>
                     </div>
+                    </div>
 
-                    <!-- Grid for Research Scholars & Alumni -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
-                        
-                        <!-- Col 1: Active Scholars -->
-                        <div class="space-y-4">
-                            <h4 class="text-xs font-extrabold uppercase text-[#0c2340] tracking-widest flex items-center gap-2">
-                                <i data-lucide="users" class="h-4 w-4 text-st-orange"></i>
-                                Active Research Scholars
+                    <!-- Container 2: Active Scholars -->
+                    <div id="people-container-scholars" class="hidden space-y-6">
+                        <div class="space-y-3.5 pt-3">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1 flex items-center gap-1.5">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                Active Researchers
                             </h4>
-                            <div class="h-px bg-slate-200"></div>
-                            
-                            <div class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <?php
                                 $activeScholars = [
                                     ["initials" => "SM", "name" => "Sagnik Mitra", "desig" => "Ph.D. Researcher (Expected Spring 2027)", "inst" => "IIT Indore"],
@@ -1753,34 +2018,35 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                     ["initials" => "MR", "name" => "Duddugunta Mohanchaitanya Reddy", "desig" => "Ph.D. Researcher (Expected Summer 2027)", "inst" => "IIT Indore"],
                                     ["initials" => "BG", "name" => "Buddhodev Ghosh", "desig" => "Ph.D. Researcher (Expected Summer 2029)", "inst" => "IIT Indore"],
                                     ["initials" => "KK", "name" => "Katta Keerthana", "desig" => "Ph.D. Researcher (Expected Summer 2030)", "inst" => "IIT Indore"],
-                                    ["initials" => "CS", "name" => "Chandrabhan Singh", "desig" => "M.S. Researcher (Expected Summer 2027)", "inst" => "IIT Indore"],
-                                    ["initials" => "SS", "name" => "Shashank Shinde", "desig" => "M.S. Researcher (Expected Summer 2027)", "inst" => "IIT Indore"]
+                                    ["initials" => "CS", "name" => "Chandrabhan Singh", "desig" => "M.Tech. Student (Expected Summer 2027)", "inst" => "IIT Indore"],
+                                    ["initials" => "SS", "name" => "Shashank Shinde", "desig" => "M.Tech. Student (Expected Summer 2027)", "inst" => "IIT Indore"]
                                 ];
                                 foreach ($activeScholars as $sch) {
                                 ?>
-                                <div class="bg-white border border-slate-200 p-4 rounded-xl flex gap-3 min-h-[5.5rem] items-center">
-                                    <div class="h-12 w-12 rounded-lg bg-st-orange/10 border border-st-orange/15 text-st-orange flex items-center justify-center font-bold text-xs shrink-0 select-none"><?php echo htmlspecialchars($sch['initials']); ?></div>
+                                <div class="bg-white border border-slate-150 rounded-xl p-4 flex flex-col justify-between text-xs min-h-[7rem] hover:shadow-md transition-all">
                                     <div>
-                                        <h5 class="text-xs font-bold text-slate-800"><?php echo htmlspecialchars($sch['name']); ?></h5>
-                                        <p class="text-[10px] font-semibold text-slate-400"><?php echo htmlspecialchars($sch['desig']); ?></p>
-                                        <p class="text-[11px] text-slate-600 mt-0.5 italic"><?php echo htmlspecialchars($sch['inst']); ?></p>
+                                        <h5 class="font-bold text-slate-800 text-sm"><?php echo htmlspecialchars($sch['name']); ?></h5>
+                                        <p class="text-[10px] text-slate-400 mt-1 font-semibold uppercase tracking-wider"><?php echo htmlspecialchars($sch['desig']); ?></p>
                                     </div>
+                                    <span class="text-[11px] text-slate-600 bg-slate-50 border border-slate-150 px-2 py-1.5 rounded italic mt-3 block text-center font-sans font-light">
+                                        <?php echo htmlspecialchars($sch['inst']); ?>
+                                    </span>
                                 </div>
                                 <?php
                                 }
                                 ?>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Col 2: Alumni -->
-                        <div class="space-y-4">
-                            <h4 class="text-xs font-extrabold uppercase text-[#0c2340] tracking-widest flex items-center gap-2">
-                                <i data-lucide="award" class="h-4 w-4 text-st-green"></i>
+                    <!-- Container 3: Alumni -->
+                    <div id="people-container-alumni" class="hidden space-y-6">
+                        <div class="space-y-3.5 pt-3">
+                            <h4 class="text-xs font-bold text-slate-400 tracking-widest border-b border-slate-100 pb-1 flex items-center gap-1.5">
+                                <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
                                 STLab Alumni & Last Affiliation
                             </h4>
-                            <div class="h-px bg-slate-200"></div>
-
-                            <div class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <?php
                                 $alumniList = [
                                     ["initials" => "AK", "name" => "Abhishek D. Kalbande", "desig" => "M.Sc. Student", "current" => "Symbiotec Zenfold Pvt. Ltd, Ujjain (M.P.)"],
@@ -1809,21 +2075,59 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 ];
                                 foreach ($alumniList as $alum) {
                                 ?>
-                                <div class="bg-white border border-slate-200 p-4 rounded-xl flex gap-3 min-h-[5.5rem] items-center">
-                                    <div class="h-12 w-12 rounded-lg bg-st-green/10 border border-st-green/15 text-st-green flex items-center justify-center font-bold text-xs shrink-0 select-none"><?php echo htmlspecialchars($alum['initials']); ?></div>
+                                <div class="bg-white border border-slate-150 rounded-xl p-4 flex flex-col justify-between text-xs min-h-[7rem] hover:shadow-md transition-all">
                                     <div>
-                                        <h5 class="text-xs font-bold text-slate-800 font-sans"><?php echo htmlspecialchars($alum['name']); ?></h5>
-                                        <p class="text-[10px] font-semibold text-slate-400"><?php echo htmlspecialchars($alum['desig']); ?></p>
-                                        <p class="text-[11px] text-[#0c2340] font-medium mt-0.5"><?php echo htmlspecialchars($alum['current']); ?></p>
+                                        <h5 class="font-bold text-slate-800 text-sm"><?php echo htmlspecialchars($alum['name']); ?></h5>
+                                        <p class="text-[10px] text-slate-400 mt-1 font-semibold uppercase tracking-wider"><?php echo htmlspecialchars($alum['desig']); ?></p>
                                     </div>
+                                    <span class="text-[11px] text-st-blue bg-st-blue/10 border border-st-blue/15 px-2 py-1.5 rounded mt-3 block text-center font-bold">
+                                        <?php echo htmlspecialchars($alum['current']); ?>
+                                    </span>
                                 </div>
                                 <?php
                                 }
                                 ?>
                             </div>
                         </div>
-
                     </div>
+
+                    <script>
+                        function switchPeopleSubTab(subtabId) {
+                            const piBtn = document.getElementById('people-subtab-pi');
+                            const scholarsBtn = document.getElementById('people-subtab-scholars');
+                            const alumniBtn = document.getElementById('people-subtab-alumni');
+                            
+                            const piContainer = document.getElementById('people-container-pi');
+                            const scholarsContainer = document.getElementById('people-container-scholars');
+                            const alumniContainer = document.getElementById('people-container-alumni');
+                            
+                            // Reset buttons classes
+                            [piBtn, scholarsBtn, alumniBtn].forEach(btn => {
+                                if (btn) {
+                                    btn.className = "flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-transparent text-slate-400 hover:text-slate-600 font-medium";
+                                    const ind = btn.querySelector('.indicator');
+                                    if (ind) ind.className = "absolute bottom-0 left-0 right-0 h-[2.5px] bg-transparent indicator";
+                                }
+                            });
+                            
+                            // Hide containers
+                            [piContainer, scholarsContainer, alumniContainer].forEach(c => {
+                                if (c) c.classList.add('hidden');
+                            });
+                            
+                            // Set active button and container
+                            const activeBtn = document.getElementById('people-subtab-' + subtabId);
+                            const activeContainer = document.getElementById('people-container-' + subtabId);
+                            
+                            if (activeBtn && activeContainer) {
+                                activeBtn.className = "flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all relative cursor-pointer border-st-orange text-[#0c2340] font-extrabold";
+                                const ind = activeBtn.querySelector('.indicator');
+                                if (ind) ind.className = "absolute bottom-0 left-0 right-0 h-[2.5px] bg-st-orange indicator";
+                                activeContainer.classList.remove('hidden');
+                            }
+                        }
+                    </script>
+
                 </div>
 
                 <!-- PUBLICATIONS PANE -->
@@ -2065,8 +2369,29 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     }
                     ?>
                     <div class="space-y-1.5">
-                        <h3 class="text-lg font-bold text-slate-805 uppercase">Publications & Patents</h3>
+                        <h3 class="text-lg font-bold text-slate-800 uppercase">Publications & Patents</h3>
                         <p class="text-xs text-slate-500 font-sans">Comprehensive records of stlab innovations, graduate dissertations, and peer-reviewed papers.</p>
+                    </div>
+
+                    <!-- Modern Search Bar and Button -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between shadow-2xs">
+                        <div class="w-full sm:w-auto flex-1 relative">
+                            <input 
+                                type="text" 
+                                id="publication-search-input" 
+                                onkeyup="filterPublications()"
+                                placeholder="Search publications by title, author, journal or year..." 
+                                class="w-full pl-9 pr-4 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-st-blue focus:border-st-blue bg-white font-sans text-slate-750"
+                            />
+                            <i data-lucide="search" class="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400"></i>
+                        </div>
+                        <button 
+                            onclick="filterPublications()" 
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4.5 py-2 text-xs font-bold bg-[#0c2340] hover:bg-st-orange hover:text-[#0c2340] text-white rounded-lg transition-all shadow-sm cursor-pointer whitespace-nowrap"
+                        >
+                            <i data-lucide="filter" class="h-3.5 w-3.5"></i>
+                            Search / Filter
+                        </button>
                     </div>
 
                     <!-- Category Tab Controls in static page (anchored jumps or simple visual separators) -->
@@ -2174,7 +2499,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-l-2 border-st-orange pl-2">Graduate Dissertations</h4>
                             <div class="space-y-3">
                                 <?php foreach ($dissertations as $diss): ?>
-                                    <div class="p-4 rounded-xl border border-slate-200 card-3d-bevel space-y-1.5 bg-gradient-to-br from-white to-slate-50/40 relative overflow-hidden flex gap-3 items-start">
+                                    <div class="p-4 rounded-xl border border-slate-200 card-3d-bevel space-y-1.5 bg-gradient-to-br from-white to-slate-50/40 relative overflow-hidden flex gap-3 items-start pub-searchable-item" data-search-text="<?= htmlspecialchars(strtolower($diss['title'] . ' ' . $diss['author'] . ' ' . $diss['institution'] . ' ' . $diss['year'])) ?>">
                                         <div class="p-1.5 px-2 bg-st-orange/15 text-st-orange font-bold text-[10px] rounded font-mono shrink-0">
                                             <?= $diss['year'] ?>
                                         </div>
@@ -2193,7 +2518,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-l-2 border-st-blue pl-2">Patents & Innovations</h4>
                             <div class="space-y-3">
                                 <?php foreach ($patents as $pat): ?>
-                                    <div class="p-4 rounded-xl border border-slate-200 card-3d-bevel space-y-2 bg-gradient-to-br from-white to-slate-50/40 relative overflow-hidden flex gap-3 items-start">
+                                    <div class="p-4 rounded-xl border border-slate-200 card-3d-bevel space-y-2 bg-gradient-to-br from-white to-slate-50/40 relative overflow-hidden flex gap-3 items-start pub-searchable-item" data-search-text="<?= htmlspecialchars(strtolower($pat['title'] . ' ' . $pat['inventors'] . ' ' . $pat['number'] . ' ' . $pat['date'] . ' ' . $pat['office'] . ' ' . ($pat['details'] ?? ''))) ?>">
                                         <div class="p-1.5 px-2 bg-st-blue/15 text-st-blue font-bold text-[10px] rounded font-mono shrink-0 uppercase">
                                             IP
                                         </div>
@@ -2241,7 +2566,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
                             <div class="space-y-2">
                                 <?php foreach ($journal_papers as $pub): ?>
-                                    <div class="p-3.5 rounded-xl border border-slate-200 card-3d-bevel flex gap-3 items-start bg-slate-50/50 hover:bg-white duration-200 transition-all">
+                                    <div class="p-3.5 rounded-xl border border-slate-200 card-3d-bevel flex gap-3 items-start bg-slate-50/50 hover:bg-white duration-200 transition-all pub-searchable-item" data-search-text="<?= htmlspecialchars(strtolower($pub['citation'] . ' ' . $pub['year'])) ?>">
                                         <div class="p-1 px-1.5 bg-st-green/10 text-st-green border border-st-green/15 rounded text-[10px] font-bold font-mono shrink-0">
                                             <?= $pub['year'] ?>
                                         </div>
@@ -2273,7 +2598,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-l-2 border-indigo-500 pl-2">Books & Book Chapters</h4>
                             <div class="space-y-2">
                                 <?php foreach ($books_and_chapters as $pub): ?>
-                                    <div class="p-3.5 rounded-xl border border-slate-200 card-3d-bevel flex gap-3 items-start bg-slate-50/50 hover:bg-white duration-200 transition-all">
+                                    <div class="p-3.5 rounded-xl border border-slate-200 card-3d-bevel flex gap-3 items-start bg-slate-50/50 hover:bg-white duration-200 transition-all pub-searchable-item" data-search-text="<?= htmlspecialchars(strtolower($pub['citation'] . ' ' . $pub['year'])) ?>">
                                         <div class="p-1 px-1.5 bg-indigo-50 text-indigo-705 border border-indigo-200 rounded text-[10px] font-bold font-mono shrink-0">
                                             <?= $pub['year'] ?>
                                         </div>
@@ -2556,7 +2881,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     </div>
 
                     <!-- Talks & Public Seminars section -->
-                    <div class="bg-slate-50 border border-slate-205 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2 text-st-orange">
@@ -2666,7 +2991,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                             href="<?= $talk['url'] ?>" 
                                             target="_blank" 
                                             rel="noopener noreferrer" 
-                                            class="inline-flex items-center gap-1 px-3 py-1 text-[10px] font-bold bg-slate-100 hover:bg-st-orange text-slate-700 hover:text-white rounded-lg transition-all duration-200 border border-slate-205 hover:border-transparent cursor-pointer shadow-xs whitespace-nowrap font-sans"
+                                            class="inline-flex items-center gap-1 px-3 py-1 text-[10px] font-bold bg-slate-100 hover:bg-st-orange text-slate-700 hover:text-white rounded-lg transition-all duration-200 border border-slate-200 hover:border-transparent cursor-pointer shadow-xs whitespace-nowrap font-sans"
                                         >
                                             <span>Watch</span>
                                             <i data-lucide="play" class="h-2.5 w-2.5 shrink-0"></i>
@@ -2683,20 +3008,19 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     </div>
 
                 </div>
-            </div>
 
                 <!-- GALLERY PANE -->
-                <div id="pane-gallery" class="tab-pane hidden space-y-8 animate-tabFadeIn">
+                <div id="pane-gallery" class="tab-pane hidden space-y-6 animate-tabFadeIn">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-st-green">
                             <span class="p-1 px-2.5 bg-st-green/10 text-st-green text-[10px] font-bold uppercase rounded-md tracking-wider border border-st-green/20">
                                 Visual Archive
                             </span>
                         </div>
-                        <h3 class="text-xl font-extrabold uppercase tracking-tight text-slate-900">
+                        <h3 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-[#0c2340]">
                             The Place of Memories
                         </h3>
-                        <p class="text-xs text-slate-500 font-sans font-light">
+                        <p class="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed font-sans font-light">
                             A serene, clean canvas dedicated to preserving handpicked milestones, academic highlights, and collaborative moments of STLab researchers at IIT Indore.
                         </p>
                     </div>
@@ -2715,106 +3039,119 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
                         <!-- Curated Memories Board Grid -->
                         <div class="space-y-6">
-                            <h5 id="php-memories-count-header" class="text-[10.5px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
-                                Archived Board Snapshots
-                            </h5>
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-2 gap-2">
+                                <h5 id="php-memories-count-header" class="text-[10.5px] font-bold text-slate-400 uppercase tracking-widest">
+                                    Archived Board Snapshots
+                                </h5>
+                                <span class="text-[10.5px] text-slate-400 italic">
+                                    Photo Courtesy: Abhishek D Kalbande and Buddhodev Ghosh
+                                </span>
+                            </div>
 
                             <div id="php-memories-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <?php
                                 $static_memories = [
                                     [
+                                        "id" => "7", 
+                                        "url" => "assets/Thesis_Submission_of_Mr_Abhishek_D_Kalbande.jpeg", 
+                                        "year" => "2026",
+                                        "fileName" => "Thesis_Submission_of_Mr_Abhishek_D_Kalbande",
+                                        "displayName" => "STLab's Student, Mr Abhishek D. Kalbande, is submitting his MSc. Thesis",
+                                        "errorNotes" => ""
+                                    ],
+                                    [
+                                        "id" => "8", 
+                                        "url" => "assets/Prof_Murthy_with_Foreign_Delegate_and_Prof_Sarkar.jpeg", 
+                                        "year" => "2026",
+                                        "fileName" => "Prof_Murthy_with_Foreign_Delegate_and_Prof_Sarkar",
+                                        "displayName" => "Prof. Murthy with Prof. Mark Wilkins, Kansas State Univ. and Prof. Sarkar (PIC, CRDT)",
+                                        "errorNotes" => ""
+                                    ],
+                                    [
+                                        "id" => "12", 
+                                        "url" => "assets/Prof._Murthys_Birthday_2025.jpg", 
+                                        "year" => "2025",
+                                        "fileName" => "Prof._Murthys_Birthday_2025",
+                                        "displayName" => "STLab team celebrating Prof. Murthy's Birthday",
+                                        "errorNotes" => ""
+                                    ],
+                                    [
                                         "id" => "1", 
-                                        "url" => "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2024",
-                                        "fileName" => "Farewel_STLab_2024",
-                                        "displayName" => "STLab members hosting a heartfelt Farewell 2024",
-                                        "errorNotes" => "Correction: 'Farewel' → 'Farewell'"
+                                        "url" => "assets/Pre-Holi_Celebration_with_Prof_Murthy.jpeg", 
+                                        "year" => "2026",
+                                        "fileName" => "Pre_Holi_Celebration_with_Prof_Murthy",
+                                        "displayName" => "STLab researchers enjoying Pre-Holi Celebration",
+                                        "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "2", 
-                                        "url" => "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2025",
-                                        "fileName" => "Lab_Work_Day",
-                                        "displayName" => "STLab scholars actively conducting biochemical experiments during a Lab Work Day",
+                                        "url" => "assets/Holi_Celebration_with_Prof_Murthy.jpeg", 
+                                        "year" => "2026",
+                                        "fileName" => "Holi_Celebration_with_Prof_Murthy",
+                                        "displayName" => "STLab members celebrating Holi festival",
                                         "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "3", 
-                                        "url" => "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600", 
+                                        "url" => "assets/Chaye_Pe_Charcha.jpeg", 
                                         "year" => "2025",
-                                        "fileName" => "Group_Photo_IIT_Indore",
-                                        "displayName" => "STLab research scholars and members Group Photo at IIT Indore",
+                                        "fileName" => "Chaye_Pe_Charcha",
+                                        "displayName" => "STLab researchers discussing core ideas over Chaye Pe Charcha",
                                         "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "4", 
-                                        "url" => "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2024",
-                                        "fileName" => "Sganik_Lab_Setup",
-                                        "displayName" => "STLab researcher Sagnik working on the optimization of his new Lab Setup",
-                                        "errorNotes" => "Correction: 'Sganik' → 'Sagnik'"
+                                        "url" => "assets/Dinner_with_Prof_Murthy.jpeg", 
+                                        "year" => "2025",
+                                        "fileName" => "Dinner_with_Prof_Murthy",
+                                        "displayName" => "STLab team sharing a pleasant dinner",
+                                        "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "5", 
-                                        "url" => "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=600", 
+                                        "url" => "assets/Learning_Doesnt_stop_with_Prof_Murthy.jpeg", 
                                         "year" => "2025",
-                                        "fileName" => "Prof_Ganti_Presentation",
-                                        "displayName" => "Prof. Ganti presenting research alongside lab members at a key conference",
+                                        "fileName" => "Learning_Doesnt_stop_with_Prof_Murthy",
+                                        "displayName" => "STLab scholars engaged in interactive learning",
                                         "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "6", 
-                                        "url" => "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2025",
-                                        "fileName" => "Research_Seminar_2025",
-                                        "displayName" => "STLab research scholars representing the lab at the Research Seminar 2025",
-                                        "errorNotes" => ""
-                                    ],
-                                    [
-                                        "id" => "7", 
-                                        "url" => "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2024",
-                                        "fileName" => "Inaugration_Ceremony",
-                                        "displayName" => "STLab members participating in the laboratory Inauguration Ceremony",
-                                        "errorNotes" => "Correction: 'Inaugration' → 'Inauguration'"
-                                    ],
-                                    [
-                                        "id" => "8", 
-                                        "url" => "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2025",
-                                        "fileName" => "Conference_Group_2025",
-                                        "displayName" => "STLab research scholars posing at the Conference Group 2025",
+                                        "url" => "assets/Sky_Exploration_with_Prof_Murthy.jpeg", 
+                                        "year" => "2026",
+                                        "fileName" => "Sky_Exploration_with_Prof_Murthy",
+                                        "displayName" => "STLab members exploring the telescope during Sky Exploration",
                                         "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "9", 
-                                        "url" => "https://images.unsplash.com/photo-1532187863486-abf9d39d66e8?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2026",
-                                        "fileName" => "Experiment_Setup_STLab",
-                                        "displayName" => "STLab scholars assembling a complex Experiment Setup at STLab",
-                                        "errorNotes" => ""
-                                    ],
-                                    [
-                                        "id" => "10", 
-                                        "url" => "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600", 
+                                        "url" => "assets/STL_Labs_Doctoral_Students_with_beloved_Prof.jpeg", 
                                         "year" => "2025",
-                                        "fileName" => "Field_Visit_Bioprocess",
-                                        "displayName" => "STLab students and researchers on an educational Field Visit for Bioprocess learning",
+                                        "fileName" => "STL_Labs_Doctoral_Students_with_beloved_Prof",
+                                        "displayName" => "STLab's Students with Prof. Murthy (Group Snapshot)",
                                         "errorNotes" => ""
                                     ],
                                     [
                                         "id" => "11", 
-                                        "url" => "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=600", 
-                                        "year" => "2026",
-                                        "fileName" => "Academic_Summit_IIT_Indore",
-                                        "displayName" => "STLab members participating in the Academic Summit at IIT Indore",
+                                        "url" => "assets/Teachers_Day_Celebration_2025.jpeg", 
+                                        "year" => "2025",
+                                        "fileName" => "Teachers_Day_Celebration_2025",
+                                        "displayName" => "STLab scholars hosting a surprise Teacher's Day Celebration",
+                                        "errorNotes" => ""
+                                    ],
+                                    [
+                                        "id" => "10", 
+                                        "url" => "assets/STL_POD_1B-601.jpeg", 
+                                        "year" => "2025",
+                                        "fileName" => "STL_POD_1B-601",
+                                        "displayName" => "STLab team at work inside the state-of-the-art STL POD 1B-601",
                                         "errorNotes" => ""
                                     ]
                                 ];
                                 foreach ($static_memories as $m):
                                 ?>
-                                <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between aspect-[4/5] relative overflow-hidden shadow-sm group hover:-rotate-1 hover:scale-[1.01] transition-transform duration-300">
-                                    <div class="relative aspect-square w-full rounded-lg overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center">
+                                <div class="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col gap-3 relative overflow-hidden shadow-sm group hover:-rotate-1 hover:scale-[1.01] transition-transform duration-300 h-full">
+                                    <div class="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center">
                                         <img 
                                             src="<?= $m['url'] ?>" 
                                             alt="<?= $m['displayName'] ?>" 
@@ -2825,12 +3162,11 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                             <?= $m['year'] ?>
                                         </div>
                                     </div>
-                                    <div class="pt-3 border-t border-slate-100 mt-2 flex flex-col gap-1">
+                                    <div class="pt-2.5 border-t border-slate-100 flex flex-col gap-1">
                                         <div class="font-extrabold text-xs text-slate-800 leading-tight text-left">
                                             <?= $m['displayName'] ?>
                                         </div>
                                         <div class="flex flex-col gap-0.5 text-[10px] text-slate-400 font-mono text-left">
-                                            <span class="truncate">File: <?= $m['fileName'] ?></span>
                                             <?php if (!empty($m['errorNotes'])): ?>
                                             <span class="text-emerald-600 font-bold font-sans text-[9px] flex items-center gap-0.5 mt-0.5 animate-pulse">
                                                 <i data-lucide="check" class="h-3 w-3 shrink-0 text-emerald-500"></i>
@@ -2848,9 +3184,18 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
                 <!-- CONTACT PANE -->
                 <div id="pane-contact" class="tab-pane hidden space-y-6 animate-tabFadeIn">
-                    <div class="space-y-1.5">
-                        <h3 class="text-lg font-bold text-slate-800 uppercase">Contact STLab Academic Core</h3>
-                        <p class="text-xs text-slate-500">Reach out for academic collaborations, research inquiries, or PhD projects submissions.</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-st-orange">
+                            <span class="p-1 px-2.5 bg-st-orange/10 text-st-orange text-[10px] font-bold uppercase rounded-md tracking-wider border border-st-orange/20">
+                                Contact Channel
+                            </span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-[#0c2340]">
+                            Contact STLab Academic Core
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed font-sans font-light">
+                            Reach out for academic collaborations, research inquiries, or PhD projects submissions.
+                        </p>
                     </div>
 
                     <?php if ($feedbackMessage): ?>
@@ -2862,26 +3207,46 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pt-2">
                         
                         <!-- Address section -->
-                        <div class="lg:col-span-8 bg-[#0c2340] rounded-2xl p-5 sm:p-6 text-white flex flex-col justify-between space-y-5 shadow-md">
+                        <div class="lg:col-span-8 bg-[#0c2340] rounded-2xl p-6 sm:p-8 text-white flex flex-col justify-between space-y-6 shadow-md">
                             <div class="space-y-4">
                                 <span class="text-st-orange text-[10px] font-bold uppercase tracking-wider block">Lab Headquarters Address</span>
-                                <div class="flex gap-3 items-start text-xs leading-relaxed font-sans">
-                                    <i data-lucide="map-pin" class="h-5 w-5 text-st-orange shrink-0 mt-0.5 animate-bounce"></i>
+                                <div class="flex gap-4 items-start text-xs leading-relaxed font-sans">
+                                    <i data-lucide="map-pin" class="h-6 w-6 text-st-orange shrink-0 mt-0.5 animate-bounce"></i>
                                     <div>
-                                        <h4 class="font-extrabold text-[#ffa34d] text-sm">Sustainable Technologies Laboratory (STLab)</h4>
-                                        <p class="text-slate-350 mt-1">601-B POD Building</p>
-                                        <p class="text-slate-350">Indian Institute of Technology Indore</p>
-                                        <p class="text-slate-350">Simrol Campus, Khandwa Road, Simrol</p>
-                                        <p class="text-slate-350">Indore, Madhya Pradesh 453552, India</p>
+                                        <h4 class="font-extrabold text-[#ffa34d] text-sm sm:text-base">Sustainable Technologies Laboratory (STLab)</h4>
+                                        <p class="text-slate-300 mt-1 sm:text-[13px]">601-B POD Building</p>
+                                        <p class="text-slate-300 sm:text-[13px]">Indian Institute of Technology Indore</p>
+                                        <p class="text-slate-300 sm:text-[13px]">Simrol Campus, Khandwa Road, Simrol</p>
+                                        <p class="text-slate-300 sm:text-[13px]">Indore, Madhya Pradesh 453552, India</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="border-t border-white/10 pt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-300 font-medium">
-                                <span class="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer select-all font-mono">
+                            <!-- Picture of our lab in the middle of Physical Address section -->
+                            <div class="w-full overflow-hidden rounded-xl border border-white/10 shadow-lg relative bg-black/10">
+                                <img src="assets/STL_POD_1B-601.jpeg" alt="STLab Physical Laboratory (601-B POD)" class="w-full h-48 sm:h-56 object-cover transform hover:scale-102 transition-all duration-500" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0c2340]/90 via-[#0c2340]/10 to-transparent pointer-events-none"></div>
+                                <span class="absolute bottom-2.5 left-3 text-[10px] sm:text-[11px] font-medium text-slate-200 bg-[#0c2340]/80 px-3 py-1 rounded-lg backdrop-blur-xs border border-white/5">
+                                    STLab Physical Laboratory Room (601-B POD Building)
+                                </span>
+                            </div>
+
+                            <!-- Direct Email Button -->
+                            <div class="pt-2 border-t border-white/10 space-y-3">
+                                <a href="mailto:ganti.murthy@iiti.ac.in?subject=STLab%20Portal%20Inquiry" class="inline-flex w-full items-center justify-center gap-2.5 px-6 py-3.5 bg-st-orange hover:bg-[#d95d12] text-white text-xs sm:text-sm font-extrabold rounded-xl transition-all duration-300 shadow-md hover:-translate-y-0.5 transform cursor-pointer">
+                                    <i data-lucide="mail" class="h-4.5 w-4.5 animate-pulse"></i>
+                                    <span>Open Mail App to Email Professor Ganti Murthy Directly</span>
+                                </a>
+                                <p class="text-[10px] text-slate-400 text-center leading-normal">
+                                    Opens your device's mail app directly to <strong class="text-slate-300">ganti.murthy@iiti.ac.in</strong> (Safe, reliable alternative if forms fail to send).
+                                </p>
+                            </div>
+
+                            <div class="border-t border-white/10 pt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-300 font-medium">
+                                <a href="mailto:ganti.murthy@iiti.ac.in" class="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer select-all font-mono">
                                     <i data-lucide="mail" class="h-3.5 w-3.5 text-st-orange"></i>
                                     ganti.murthy@iiti.ac.in
-                                </span>
+                                </a>
                                 <span class="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer font-mono">
                                     <i data-lucide="globe" class="h-3.5 w-3.5 text-st-orange"></i>
                                     iiti.ac.in
@@ -2890,21 +3255,25 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                         </div>
 
                         <!-- Inquiry form -->
-                        <div class="lg:col-span-4 bg-slate-50 rounded-2xl border border-slate-200 p-5 space-y-4 hover:bg-white duration-300 transition-all flex flex-col">
-                            <h4 class="text-xs font-bold text-slate-805 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                                <i data-lucide="award" class="h-4 w-4 text-st-orange"></i>
-                                Academic Inquiries
-                            </h4>
-                            <div class="text-xs text-slate-600 space-y-3 font-sans leading-relaxed flex-1">
-                                <p>If you are a student interested in pursuing doctoral or postdoctoral research under Prof. Ganti S. Murthy, please read the official admissions details on IIT Indore website first.</p>
-                                <p>Project applications in life-cycle metrics, systems engineering, or bio-process controls may be directed via Dr. Murthy's official email address shown.</p>
+                        <div class="lg:col-span-4 bg-slate-50 rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5 hover:bg-white duration-300 transition-all flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2 flex items-center gap-1.5">
+                                    <i data-lucide="award" class="h-4 w-4 text-st-orange"></i>
+                                    Academic Inquiries
+                                </h4>
+                                <div class="text-[11.5px] text-slate-600 space-y-3.5 font-sans leading-relaxed">
+                                    <p class="font-medium text-slate-800">If you are a student interested in pursuing doctoral or postdoctoral research under Prof. Ganti S. Murthy, please read the official admissions details on IIT Indore website first.</p>
+                                    <div class="bg-white p-4 rounded-xl border border-slate-200 leading-relaxed text-slate-700 shadow-2xs italic font-light">
+                                        “Prospective students must send a clear two-page CV. Along with the CV, please send a one page note describing 1) your research interests and experience, 2) why you are interested in a particular area and 3) how can you contribute to the STL research program. Brevity and specificity is prized by us. You are applying to an Engineering program, not a poetry contest, so do not send us AI slop with generic statements. We are interested in working with you as a person. You are more likely to get a response if you do not use AI generated text. Write in your own language however ‘unpolished’ it may sound.”
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
 
                     <!-- Direct Form Submission -->
-                    <div class="bg-slate-50 border border-slate-205 rounded-2xl p-5 sm:p-6 shadow-xs mt-3">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs mt-3">
                         <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2 mb-4 flex items-center gap-1.5">
                             <i data-lucide="mail" class="h-4 w-4 text-st-orange"></i>
                             STLab Suggestion & Inquiry Form
@@ -2930,7 +3299,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                             </div>
                             <div class="sm:col-span-2 border-t border-slate-100 pt-3">
                                 <button type="submit" class="w-full bg-st-orange hover:bg-[#d95d12] text-white text-xs font-bold py-2.5 px-4 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs">
-                                    Submit Suggestion to Dr. Ganti Murthy
+                                    Submit Suggestion to Prof. Ganti Murthy
                                 </button>
                                 <span class="block text-[9.5px] text-center text-slate-400 mt-2">
                                     Submissions are automatically delivered to <span class="font-semibold text-slate-500">ganti.murthy@iiti.ac.in</span>
@@ -2949,14 +3318,14 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 </h4>
                                 <p class="text-[11px] text-slate-500 font-sans">601-B POD Building, Indian Institute of Technology Indore, Simrol Campus, Khandwa Road, Simrol, Indore, Madhya Pradesh 453552, India</p>
                             </div>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Indian+Institute+of+Technology+Indore" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-sm cursor-pointer transform hover:-translate-y-0.5">
+                            <a href="https://maps.app.goo.gl/EP3dxc4qz6pxHgyaA" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-[#0c2340] hover:bg-[#ffa04d] hover:text-[#0c2340] text-white rounded-lg transition-all shadow-sm cursor-pointer transform hover:-translate-y-0.5">
                                 <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
                                 Open in Google Maps
                             </a>
                         </div>
 
                         <!-- Embedded map iframe -->
-                        <div class="w-full h-80 rounded-xl overflow-hidden border border-slate-205 shadow-md bg-slate-100 relative">
+                        <div class="w-full h-80 rounded-xl overflow-hidden border border-slate-200 shadow-md bg-slate-100 relative">
                             <iframe
                                 title="IIT Indore Simrol Google Map"
                                 src="https://maps.google.com/maps?q=Indian%20Institute%20of%20Technology%20Indore&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
@@ -2978,10 +3347,10 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                                 Live Station Feed
                             </span>
                         </div>
-                        <h3 class="text-xl font-extrabold uppercase tracking-tight text-slate-900">
+                        <h3 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-[#0c2340]">
                             IITI Weather Statistics
                         </h3>
-                        <p class="text-xs text-slate-500 font-sans font-light">
+                        <p class="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed font-sans font-light">
                             Explore the weather analytics, telemetry data, and sensor visualization from the weather station hosted directly on the Simrol campus.
                         </p>
                     </div>
@@ -3035,8 +3404,8 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
             </div>
 
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-800 pb-8 mb-8">
-                <div class="flex items-center">
-                    <img src="/assets/STL_New.svg" alt="STL Sustainable Technologies Laboratory" class="h-16 sm:h-20 w-auto select-none shrink-0" referrerPolicy="no-referrer" />
+                <div class="flex items-center bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm max-h-24">
+                    <img src="assets/STL_New_PNG.png" alt="STL Sustainable Technologies Laboratory" class="h-14 sm:h-16 w-auto select-none shrink-0" referrerPolicy="no-referrer" />
                 </div>
 
                 <div class="flex flex-col items-start md:items-end gap-3.5">
@@ -3050,14 +3419,16 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                     <!-- Server Time / Local Clock in the footer-right block -->
                     <div class="flex items-center gap-2 bg-[#06172a] border border-[#112f54]/60 px-3.5 py-1.5 rounded-full shadow-[inset_0_1px_4px_rgba(0,0,0,0.3)] select-none text-[10.5px] font-mono font-bold text-slate-300">
                         <i data-lucide="clock" class="h-3.5 w-3.5 text-st-orange animate-pulse"></i>
-                        <span id="live-clock" class="tracking-wider">00:00:00 UTC</span>
+                        <span id="live-clock" class="tracking-wider">00:00:00 IST</span>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-500 gap-4 font-sans">
-                <div>
-                    &copy; <?php echo date("Y"); ?> Sustainable Technologies Laboratory. All rights reserved.
+                <div class="flex flex-col sm:flex-row gap-1 sm:gap-4 items-center">
+                    <span>&copy; <?php echo date("Y"); ?> Sustainable Technologies Laboratory. All rights reserved.</span>
+                    <span class="hidden sm:inline text-slate-700">|</span>
+                    <span>Web design and STL logo created by Buddhodev Ghosh</span>
                 </div>
                 <div class="flex gap-1.5 items-center">
                     <span class="h-1.5 w-1.5 rounded-full bg-st-green inline-block animate-pulse"></span>
@@ -3107,7 +3478,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
             // Reset tab quick navigation buttons styling
             document.querySelectorAll("[id^='tab-btn-']").forEach(btn => {
-                btn.className = "flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue";
+                btn.className = "flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-600 hover:bg-slate-200/50 hover:text-st-blue";
             });
 
             const activeTabBtn = document.getElementById("tab-btn-" + tabId);
@@ -3118,7 +3489,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
                 } else if (tabId === 'people' || tabId === 'learning' || tabId === 'weather') {
                     colorClass = "bg-st-green text-white shadow-[0_3px_8px_rgba(43,147,34,0.25)]";
                 }
-                activeTabBtn.className = `flex items-center gap-1.5 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${colorClass} border-b-2 border-black/10 scale-[1.02]`;
+                activeTabBtn.className = `flex items-center gap-1.5 px-5 py-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${colorClass} border-b-2 border-black/10 scale-[1.02]`;
             }
 
             // Sync URL query state dynamically (without reloading page, for clean routing)
@@ -3180,7 +3551,7 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
         const webMembersDb = {
             ganti: {
-                name: "Dr. Ganti Suryanarayana Murthy",
+                name: "Prof. Ganti Suryanarayana Murthy",
                 tag: "Laboratory Director & Chair Professor",
                 desc: "Directs all operations at the Sustainable Technologies Laboratory. Bridges advanced bioprocess pathways, cyber-physical automation, and translation of the rich heritage of Indian Knowledge Systems (IKS).",
                 topic: "Whole-System Systems Engineering (LCA, TEA, Modeling)",
@@ -3246,15 +3617,41 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
             // ignore
         }
 
+        const defaultMemories = [
+            { id: "7", url: "assets/Thesis_Submission_of_Mr_Abhishek_D_Kalbande.jpeg", year: "2026", fileName: "Thesis_Submission_of_Mr_Abhishek_D_Kalbande", displayName: "STLab's Student, Mr Abhishek D. Kalbande, is submitting his MSc. Thesis", errorNotes: "" },
+            { id: "8", url: "assets/Prof_Murthy_with_Foreign_Delegate_and_Prof_Sarkar.jpeg", year: "2026", fileName: "Prof_Murthy_with_Foreign_Delegate_and_Prof_Sarkar", displayName: "Prof. Murthy with Prof. Mark Wilkins, Kansas State Univ. and Prof. Sarkar (PIC, CRDT)", errorNotes: "" },
+            { id: "12", url: "assets/Prof._Murthys_Birthday_2025.jpg", year: "2025", fileName: "Prof._Murthys_Birthday_2025", displayName: "STLab team celebrating Prof. Murthy's Birthday", errorNotes: "" },
+            { id: "1", url: "assets/Pre-Holi_Celebration_with_Prof_Murthy.jpeg", year: "2026", fileName: "Pre_Holi_Celebration_with_Prof_Murthy", displayName: "STLab researchers enjoying Pre-Holi Celebration", errorNotes: "" },
+            { id: "2", url: "assets/Holi_Celebration_with_Prof_Murthy.jpeg", year: "2026", fileName: "Holi_Celebration_with_Prof_Murthy", displayName: "STLab members celebrating Holi festival", errorNotes: "" },
+            { id: "3", url: "assets/Chaye_Pe_Charcha.jpeg", year: "2025", fileName: "Chaye_Pe_Charcha", displayName: "STLab researchers discussing core ideas over Chaye Pe Charcha", errorNotes: "" },
+            { id: "4", url: "assets/Dinner_with_Prof_Murthy.jpeg", year: "2025", fileName: "Dinner_with_Prof_Murthy", displayName: "STLab team sharing a pleasant dinner", errorNotes: "" },
+            { id: "5", url: "assets/Learning_Doesnt_stop_with_Prof_Murthy.jpeg", year: "2025", fileName: "Learning_Doesnt_stop_with_Prof_Murthy", displayName: "STLab scholars engaged in interactive learning", errorNotes: "" },
+            { id: "6", url: "assets/Sky_Exploration_with_Prof_Murthy.jpeg", year: "2026", fileName: "Sky_Exploration_with_Prof_Murthy", displayName: "STLab members exploring the telescope during Sky Exploration", errorNotes: "" },
+            { id: "9", url: "assets/STL_Labs_Doctoral_Students_with_beloved_Prof.jpeg", year: "2025", fileName: "STL_Labs_Doctoral_Students_with_beloved_Prof", displayName: "STLab's Students with Prof. Murthy (Group Snapshot)", errorNotes: "" },
+            { id: "11", url: "assets/Teachers_Day_Celebration_2025.jpeg", year: "2025", fileName: "Teachers_Day_Celebration_2025", displayName: "STLab scholars hosting a surprise Teacher's Day Celebration", errorNotes: "" },
+            { id: "10", url: "assets/STL_POD_1B-601.jpeg", year: "2025", fileName: "STL_POD_1B-601", displayName: "STLab team at work inside the state-of-the-art STL POD 1B-601", errorNotes: "" }
+        ];
+
         if (phpMemories.length === 0) {
-            phpMemories = [
-                { id: "1", url: "https://static.wixstatic.com/media/78e40700dbdb478e997aa3cbcbe2e8aa.jpg", year: "2026" },
-                { id: "2", url: "https://static.wixstatic.com/media/f1ac66_87ba4fc71205458ba817ce8fc7416ff1~mv2.jpg", year: "2025" },
-                { id: "3", url: "https://static.wixstatic.com/media/f1ac66_87352ef057394a8b8b2a20b1adf24af0~mv2.jpg", year: "2024" },
-                { id: "4", url: "https://static.wixstatic.com/media/f1ac66_4c3ffd81d1844b01a4d2f5dde0f79735~mv2.jpg", year: "2025" },
-                { id: "5", url: "https://static.wixstatic.com/media/f1ac66_63b1f6892d12493e8dbcf17f45190727~mv2.jpg", year: "2025" },
-                { id: "6", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600", year: "2024" }
-            ];
+            phpMemories = defaultMemories;
+        } else {
+            // Update default memories in the loaded list so changes are forced
+            phpMemories = phpMemories.map(item => {
+                const def = defaultMemories.find(d => d.id === item.id);
+                return def ? Object.assign({}, item, def) : item;
+            });
+            // If some defaults are missing completely, append them in order
+            defaultMemories.forEach(def => {
+                if (!phpMemories.some(m => m.id === def.id)) {
+                    phpMemories.push(def);
+                }
+            });
+        }
+        // Force-persist updated descriptions to localStorage so the user immediately sees changes
+        try {
+            localStorage.setItem("stlab_memories", JSON.stringify(phpMemories));
+        } catch(e) {
+            // ignore
         }
 
         function renderPhpMemories() {
@@ -3269,17 +3666,29 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
 
                 phpMemories.forEach(m => {
                     const yearVal = m.year || (m.date ? (m.date.match(/\d{4}/)?.[0] || "2026") : "2026");
+                    const displayNameVal = m.displayName || m.caption || "STLab Memory";
+                    const fileNameVal = m.fileName || (m.caption ? m.caption.replace(/\s+/g, '_') : "Uploaded_Image");
+                    const errorNotesHtml = m.errorNotes ? `
+                        <span class="text-emerald-600 font-bold font-sans text-[9px] flex items-center gap-0.5 mt-0.5 animate-pulse">
+                            <i data-lucide="check" class="h-3 w-3 shrink-0 text-emerald-500"></i>
+                            ${m.errorNotes}
+                        </span>
+                    ` : '';
+
                     const card = document.createElement("div");
-                    card.className = "bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between aspect-[4/5] relative overflow-hidden shadow-sm group hover:-rotate-1 hover:scale-[1.01] transition-transform duration-300";
+                    card.className = "bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col gap-3 relative overflow-hidden shadow-sm group hover:-rotate-1 hover:scale-[1.01] transition-transform duration-300 h-full";
                     card.innerHTML = `
-                        <div class="relative aspect-square w-full rounded-lg overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center">
-                            <img src="${m.url}" alt="Memory ${yearVal}" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
-                        </div>
-                        <div class="pt-3 border-t border-slate-100 mt-2 flex flex-col justify-between text-center">
-                            <div class="flex justify-center items-center gap-1.5 py-1">
-                                <i data-lucide="heart" class="h-3 w-3 text-rose-500 fill-rose-500/30 font-bold"></i>
-                                <span class="text-xs font-extrabold text-slate-800 tracking-wider">Year: ${yearVal}</span>
+                        <div class="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center">
+                            <img src="${m.url}" alt="${displayNameVal}" class="w-full h-full object-cover transition-transform duration-350 group-hover:scale-105" referrerpolicy="no-referrer" />
+                            <div class="absolute top-2 right-2 px-2 py-0.5 bg-black/75 backdrop-blur-xs text-[10px] font-bold text-white rounded-md tracking-wider">
+                                ${yearVal}
                             </div>
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-100 flex flex-col gap-1">
+                            <div class="font-extrabold text-xs text-slate-800 leading-tight text-left">
+                                ${displayNameVal}
+                            </div>
+                            ${errorNotesHtml}
                         </div>
                     `;
                     grid.appendChild(card);
@@ -3323,11 +3732,46 @@ if (!in_array($activeTab, ['home', 'news', 'research', 'people', 'publications',
         // Initialize clock
         function updateClock() {
             const now = new Date();
-            const timeStr = now.toLocaleTimeString("en-US", { timeStyle: "medium", hour12: false });
-            document.getElementById("live-clock").textContent = timeStr + " UTC";
+            const timeStr = now.toLocaleTimeString("en-US", { 
+                timeZone: "Asia/Kolkata",
+                timeStyle: "medium", 
+                hour12: false 
+            });
+            document.getElementById("live-clock").textContent = timeStr + " IST";
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        // Publications Tab Filter Function
+        window.filterPublications = function() {
+            const input = document.getElementById("publication-search-input");
+            if (!input) return;
+            const query = input.value.toLowerCase().trim();
+            const items = document.querySelectorAll(".pub-searchable-item");
+            
+            items.forEach(item => {
+                const text = item.getAttribute("data-search-text") || "";
+                if (text.includes(query)) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+            
+            // Also toggle sections visibility if they contain any matching items
+            const sections = ["sec-dissertations", "sec-patents", "sec-journals", "sec-books"];
+            sections.forEach(id => {
+                const sec = document.getElementById(id);
+                if (sec) {
+                    const visibleItems = Array.from(sec.querySelectorAll(".pub-searchable-item")).filter(item => item.style.display !== "none");
+                    if (visibleItems.length > 0) {
+                        sec.style.display = "";
+                    } else {
+                        sec.style.display = "none";
+                    }
+                }
+            });
+        };
 
         // Run tab initializer on boot
         switchTab(activeTab);
