@@ -1,0 +1,486 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{skt}{HTML}{7B3F00}
+
+\captionsetup{font=small,labelfont=bf,width=.92\textwidth}
+\setlength{\parindent}{1.2em}
+\onehalfspacing
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\itshape Pauṣa Vṛṣṭi Nirṇaya}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\skt}[1]{\textcolor{skt}{\textit{#1}}}
+\newcommand{\dv}{\vspace{2pt}}
+
+\title{\vspace{-1.5cm}
+\textcolor{navy}{\Huge\bfseries Pauṣa Vṛṣṭi Nirṇaya}\\[6pt]
+{\Large Reconstructing the \skt{daṇḍa-patākā} Rain Calendar of the\\
+\skt{Kṛṣi-Parāśara} (vv.~30--33), and Why It Cannot Be Tested at $23^\circ$N}\\[6pt]
+{\large With a Specification for Replication in the Northwest Winter-Rain Belt}}
+
+\author{Buddhodev Ghosh\\[3pt]
+{\small\itshape from data collected by Damodara Das}}
+\date{\small August 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+The \skt{Pauṣa-vṛṣṭi-nirṇaya} of the \skt{Kṛṣi-Parāśara} (vv.~30--33) determines the rain of Pauṣa. At sunrise on Pauṣa \skt{śukla pratipadā} the observer sets a flag upon a staff --- the \skt{daṇḍa-patākā} --- watches it for $2\tfrac{1}{2}$ days, and reads from the directional record a day-by-day rainfall forecast for the thirty days of Pauṣa itself. We reconstruct the mapping from the text's own arithmetic: $2\tfrac{1}{2}$ days is $150$ \skt{daṇḍas}; five \skt{daṇḍas} ($2$~h) encode one day, giving thirty days exactly (v.~32); and each unit divides at its midpoint, the first $2\tfrac{1}{2}$ \skt{daṇḍas} forecasting that day's \skt{vāsarī vṛṣṭi} and the second the same day's \skt{naiśikī}. Sixty hours observed yield sixty half-day forecasts. The scope is Pauṣa and nothing beyond it, which is what the section's title states.
+
+We implement this against $113{,}232$ hourly observations for Ahmedabad ($23.03^\circ$N), generating $780$ forecast cells over thirteen Pauṣa seasons. The test is \emph{statistically degenerate}. Across $390$ forecast days Ahmedabad recorded two days with $\ge1$~mm of rain and $3.6$~mm in total; seven of thirteen Pauṣa seasons recorded exactly zero. The contingency table is $2$ hits, $220$ false alarms, $0$ misses, $168$ correct negatives (Fisher exact $p=0.508$), and simulation shows that with only two events no effect size is detectable at all: power does not exceed $1.4\%$ even against a fiftyfold relative risk. No skill statistic computed on this sample carries information about the method.
+
+We argue that this degeneracy is itself the principal finding, because it is predicted by the text's provenance. A companion study locates the treatise's meteorological core between $30^\circ$ and $34^\circ$N; there, Pauṣa rain is real, delivered by western disturbances arriving from the west. Verse~31 is accordingly half-corroborated by modern synoptic meteorology: the \skt{vāruṇa} (westerly) clause matches the warm, moist pre-frontal flow that produces the rain, while the \skt{saumya} (northerly) clause corresponds to the cold, dry post-frontal clearance and is inverted. Drawing on IMD normals we show the winter rainy-day base rate rises from Ahmedabad's $0.15$ per month to $2.4$ at Amritsar and $3.5$ at Jammu --- a roughly twentyfold gain in predictand variance --- and we specify a replication protocol over $\sim$70 Pauṣa seasons using ERA5 hourly winds, NOAA ISD station cross-validation, and IMD $0.25^\circ$ gridded rainfall, with anomaly-based verification, Peirce and Heidke skill scores, effective-degrees-of-freedom correction and block bootstrapping.
+\end{abstract}
+
+\vspace{4pt}\noindent\textbf{Keywords:} \skt{Kṛṣi-Parāśara}; \skt{Pauṣa-vṛṣṭi-nirṇaya}; \skt{daṇḍa-patākā}; western disturbances; base rate; forecast verification; ethnometeorology.
+
+\vspace{6pt}\hrule
+
+\section*{Acknowledgement and Provenance of the Study}
+\addcontentsline{toc}{section}{Acknowledgement}
+
+This paper completes work begun by another hand. During the COVID-19 period of 2020--21, \textbf{Damodara Das}, a monk resident in Gujarat, undertook to test the \skt{Kṛṣi-Parāśara}'s Pauṣa rain method empirically. He purchased a commercial hourly meteorological series for Ahmedabad, built parsing tools for supplementary online sources, and --- most remarkably --- kept the vigil the text itself demands. Through Pauṣa 2020--21 he recorded anemometer readings at Kevadiya Colony at ten-minute intervals for thirty consecutive days, capturing each reading as a screenshot and afterwards extracting the values by optical character recognition into spreadsheets. That series is, so far as we are aware, the only instrumental record in which the \skt{daṇḍa-patākā} protocol was performed with knowledge of what was being attempted.
+
+Ill health prevented him from carrying the analysis through. He transferred the complete corpus --- the purchased series, the ground-truth observations, the parsing workbooks, and his own notes on their provenance --- to the present author, who works on the traditional rainfall-prediction literature, with the request that the study be finished. This paper discharges that request. The observational labour, the dataset, and the original conception are his; the reconstruction of the algorithm, the statistical analysis, and the interpretation are mine, and any errors in them are likewise mine.
+
+His working files preserve a scrupulous version history --- successive dated copies of each workbook, retained so that any error could be traced back through the chain of derivations. That habit is what makes the corpus reusable, and it sets a standard this paper has tried not to fall short of.
+
+\section{Introduction}
+
+The \skt{Kṛṣi-Parāśara} is the most substantial surviving Sanskrit treatise on agriculture: 243 verses, predominantly \skt{anuṣṭubh}, opening with a salutation to Prajāpati and the purpose \skt{kṛṣakāṇāṃ hitārthāya}, ``for the benefit of farmers.'' Rainfall and its prediction occupy sixty-nine verses, more than a quarter of the whole, and precede everything else.
+
+Sadhale enumerates ten forecasting procedures \cite{sadhale}. Most are astrological. Two are not: the \skt{pravāha-daṇḍa}, gauging a running stream by a rod, and the \skt{daṇḍa-patākā}, reading wind direction from a flag on a fixed rod. Verses 30--33 describe the second, under the heading \skt{Pauṣa-vṛṣṭi-nirṇaya}.
+
+That heading fixes both the object and the scope of the procedure, and both have been misconstrued. The object is \skt{vṛṣṭi}, rain: the wind is the instrument by which rain is determined, not the subject of enquiry, and the output is a rainfall calendar rather than a characterisation of the wind. The scope is \emph{Pauṣa}: the observation is made in Pauṣa and the forecast is for Pauṣa's own thirty days. The section does not forecast the year, and it does not recur monthly.
+
+The \skt{daṇḍa-patākā} is unusually suited to empirical test. Unlike an astrological rule it specifies an instrument, a start time, a duration, a resolution, and a decision rule, and admits one reading once its units are fixed. Whether it works is a question data can answer --- provided the data contain the phenomenon it forecasts. The burden of this paper is that the available data do not, and that this is informative rather than merely disappointing.
+
+\paragraph{Corrections to earlier reconstructions.}
+We record three, two of them our own, because the sequence is instructive and because each error is one a reader might independently make.
+
+\emph{(i) Directional.} Verse~31 assigns rain to the \emph{north and west}, drought to the \emph{east and south} --- the inverse of the assignment commonly assumed. Section~\ref{sec:wd} shows this is not arbitrary, and is half-corroborated by modern synoptic meteorology.
+
+\emph{(ii) Scope, first error.} We initially read the $2\tfrac{1}{2}$ days as one-twelfth of a continuous thirty-day annual vigil, each block encoding one month of the following year. The arithmetic is seductive --- twelve blocks of $2\tfrac{1}{2}$ days make exactly thirty days --- but it requires a month-long uninterrupted watch and finds no warrant in the text.
+
+\emph{(iii) Scope, second error.} We then read the procedure as recurring at every month's opening, each month forecasting itself. This is practicable and preserves the verse~32 arithmetic, but it over-generalises \skt{pauṣādinā} and ignores the section title. The correct reading is the narrowest: one observation, in Pauṣa, for Pauṣa.
+
+Appendix~C records the statistics obtained under (ii) and (iii), since they document how a plausible-looking but wrong structural reading behaves.
+
+\section{The Algorithm}
+
+\subsection{Text and translation}
+
+\begin{quote}\small
+\skt{sārdhaṁ dinadvayaṁ mānaṁ kṛtvā pauṣādinā budhaḥ\,|}\\
+\skt{gaṇayen māsikīṁ vṛṣṭim avṛṣṭiṁ vānilakramāt\,||}\hfill(30)
+\dv
+
+\noindent The wise one, having made the measure of two and a half days, beginning with Pauṣa, shall reckon the monthly rain or its absence from the sequence of the wind.
+\end{quote}
+
+\begin{quote}\small
+\skt{saumya-vāruṇayor vṛṣṭir avṛṣṭiḥ pūrva-yāmyayoḥ\,|}\\
+\skt{nirvāte vṛṣṭihāniḥ syāt saṁkule saṁkulaṁ jalam\,||}\hfill(31)
+\dv
+
+\noindent In the north and the west, rain; in the east and the south, no rain. In calm, there shall be failure of rain; in turbulence, turbulent water.
+\end{quote}
+
+\begin{quote}\small
+\skt{ekaikaṁ pañcadaṇḍena māsasya divaso mataḥ\,|}\\
+\skt{pūrvārdhaṁ vāsarī vṛṣṭir uttarārdhe ca naiśikī\,||}\hfill(32)
+\dv
+
+\noindent Each single unit of five \skt{daṇḍas} is held to be one day of the month. The first half is daytime rain, and in the second half, nighttime.
+\end{quote}
+
+\begin{quote}\small
+\skt{dattvā daṇḍe patākāṁ tu vātasyānukrameṇa ca\,|}\\
+\skt{vijñeyā māsikī vṛṣṭiḥ kṛtvā yatnam aharniśam\,||}\hfill(33)
+\dv
+
+\noindent Having set a flag upon a staff, then, according to the sequence of the wind, the monthly rain is to be known --- by making effort day and night.
+\end{quote}
+
+\subsection{Arithmetic reconstruction}
+
+The units follow standard Indian horology: one \skt{daṇḍa} (= \skt{ghaṭikā}) is $24$ minutes; one civil day is $60$ \skt{daṇḍas}.
+
+Verse~30 gives the observation as $2\tfrac{1}{2}$ days:
+\[
+2.5\ \text{days}=150\ \text{daṇḍas}=60\ \text{hours}.
+\]
+Verse~32 states that five \skt{daṇḍas} constitute one day of the month:
+\[
+5\ \text{daṇḍas}=120\ \text{min}=2\ \text{hours},\qquad \frac{150}{5}=30\ \text{units}.
+\]
+Thirty units is the length of the month. A single $2\tfrac{1}{2}$-day observation therefore supplies a forecast for thirty days, and verse~32's second half divides each unit at its midpoint: the first $2\tfrac{1}{2}$ \skt{daṇḍas} (one hour) forecast \skt{vāsarī vṛṣṭi}, the daytime rain of the corresponding day; the second $2\tfrac{1}{2}$ \skt{daṇḍas} forecast \skt{naiśikī}, the rain of that same night. Hence
+\[
+60\ \text{hours observed}\;\longleftrightarrow\;30\ \text{days}\times2=60\ \text{half-day forecasts},
+\]
+a bijection at one hour observed per half-day forecast, with no remainder at any level (Figure~\ref{fig:mapping}).
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{f1_mapping.pdf}
+\caption{The \skt{Pauṣa-vṛṣṭi-nirṇaya} mapping. A single $2\tfrac{1}{2}$-day ($150$-\skt{daṇḍa}) observation beginning at sunrise on Pauṣa \skt{śukla pratipadā} forecasts the thirty days of Pauṣa itself. Each unit of five \skt{daṇḍas} corresponds to one day, its first half giving that day's daytime rain and its second half the same day's nighttime rain.}
+\label{fig:mapping}
+\end{figure}
+
+\skt{Māsikī vṛṣṭi} in verses 30 and 33 --- ``the monthly rain'' --- is the rain of the month in question, which under the section heading \skt{Pauṣa-vṛṣṭi-nirṇaya} is Pauṣa. \skt{Pauṣādinā} specifies when the observation is taken; it does not extend the forecast beyond the month observed. The procedure is a single annual operation of sixty hours, and the treatise's other nine methods address the remainder of the year.
+
+\subsection{The directional rule}
+
+Verse~31 halves the compass (Figure~\ref{fig:compass}). \skt{Saumya} (north) and \skt{vāruṇa} (west) --- the quarters of Soma and Varuṇa, both water deities --- give \skt{vṛṣṭi}. \skt{Pūrva} (east) and \skt{yāmya} (south, Yama's quarter) give \skt{avṛṣṭi}. Two further states are named: \skt{nirvāta}, calm, giving \skt{vṛṣṭihāni}; and \skt{saṃkula}, turbulence, giving \skt{saṃkulaṁ jalam}.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.44\textwidth]{f2_compass.pdf}
+\caption{The directional key of verse~31. Section~\ref{sec:wd} shows the westerly clause to be corroborated by western-disturbance meteorology and the northerly clause to be inverted.}
+\label{fig:compass}
+\end{figure}
+
+We operationalise this as
+\[
+\mathrm{pred}(\theta,v)=
+\begin{cases}
+0, & v\le 1\ \mathrm{km\,h^{-1}}\ (\skt{nirvāta})\\
+1, & \theta\in[315^\circ,45^\circ)\cup[225^\circ,315^\circ)\quad(\skt{saumya},\skt{vāruṇa})\\
+0, & \theta\in[45^\circ,225^\circ)\quad(\skt{pūrva},\skt{yāmya})
+\end{cases}
+\]
+with $\theta$ the direction from which the wind blows.
+
+\section{Data and Method}
+
+\subsection{The corpus}
+
+\textbf{(i) Commercial hourly series (primary).} $113{,}232$ hourly records for Ahmedabad ($23.03^\circ$N, $72.58^\circ$E, $55$~m), 1~July~2008 -- 31~May~2021: wind direction, speed, $16$-point class, precipitation, temperature, humidity, pressure. A companion daily file ($4{,}718$ records) supplies totals and sunrise times. Hourly resolution matches the algorithm exactly, since the text's two-hour unit divides into two one-hour halves.
+
+\textbf{(ii) Kevadiya Colony ground-truth series.} Ten-minute anemometer readings over thirty days of Pauṣa 2020--21 at Kevadiya Colony ($\sim$90~km SSE of Ahmedabad), documenting a pronounced diurnal rotation: bearings near $85^\circ$ before dawn, through $120$--$155^\circ$ by mid-afternoon, returning to $60$--$90^\circ$ overnight.
+
+\textbf{(iii) DarkSky extractions.} Wind series for Ahmedabad and comparison cities, parsed by VBA macros preserved across dated workbook versions; used for cross-validation of (i).
+
+\subsection{Why Ahmedabad, and what the corpus can bear}
+\label{sec:whyhere}
+
+Candour is owed, because the answer bears directly on the result.
+
+Ahmedabad was not chosen because the \skt{Kṛṣi-Parāśara} describes Gujarat. It was chosen because Damodara Das lived in Gujarat, could purchase a long hourly series for the nearest major station, and could keep the vigil at a site within reach. The sampling is opportunistic and the site lies outside the region \S\ref{sec:prov} identifies as the text's meteorological home.
+
+What the corpus supports is narrower than we had hoped and different in kind from what we anticipated. It cannot measure the method's skill, for reasons \S\ref{sec:degen} makes precise. What it can do is establish, quantitatively and from a long instrumental record, that the phenomenon the method forecasts does not occur at this latitude --- and thereby convert a scholarly inference about the text's provenance into a testable and tested claim. That is a smaller result than a skill score but not a negligible one, and it is the result the data actually license.
+
+The corpus's most distinctive component, the Kevadiya series, retains an independent value discussed in \S\ref{sec:design}: not a large sample but a unique one.
+
+\subsection{Window placement and validation}
+
+Pauṣa \skt{śukla pratipadā} dates were taken from Lahiri \skt{pañcāṅga} tabulations for the Gujarat longitude; December sunrise at Ahmedabad falls between 07:13 and 07:22~IST, and $t_0=07{:}00$ was adopted uniformly. The observation window is $[t_0,\,t_0+60\,\mathrm{h})$. Forecast day $k$ ($k=1,\dots,30$) is validated against observed rainfall on the $k$th day from Pauṣa \skt{śukla pratipadā}. Thirteen seasons (2008--2020) yielded complete windows, giving $390$ forecast days and $780$ half-day cells.
+
+Because the text forecasts occurrence rather than amount, the natural verification is a $2\times2$ contingency table on wet-day occurrence, from which we compute accuracy, the Heidke and Peirce skill scores, and Fisher's exact test. Wet days are defined at $\ge1$~mm; we also report the $>0$~mm trace threshold.
+
+\section{Results}
+
+\subsection{The forecast}
+
+The thirteen observation windows produced widely varying predictions: the fraction of Pauṣa days forecast rainy ranged from $0.067$ (2017) to $0.967$ (2008), with a mean of $0.57$. The procedure is therefore not degenerate on the predictor side --- it discriminates between years, and would have given a traditional observer materially different expectations from one Pauṣa to the next. The day and night halves agreed in almost every unit.
+
+\subsection{The predictand does not exist}
+\label{sec:degen}
+
+Across $390$ Pauṣa forecast days at Ahmedabad:
+
+\begin{itemize}\itemsep1pt
+\item \textbf{2 days} recorded $\ge1$~mm of rain ($0.51\%$);
+\item \textbf{8 days} recorded any measurable rain ($2.05\%$);
+\item total Pauṣa rainfall across all thirteen seasons was \textbf{3.6~mm}, a mean of $0.28$~mm per season;
+\item \textbf{seven of thirteen seasons recorded exactly $0.0$~mm.}
+\end{itemize}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{f3_degeneracy.pdf}
+\caption{(a) Observed Pauṣa rainfall by season (bars; red = exactly zero) against the predicted rainy fraction (line). The predictor varies substantially while the predictand is almost everywhere zero. (b) Mean winter rainy days per month (IMD, $\ge2.5$~mm threshold) at Ahmedabad against stations of the $30$--$34^\circ$N belt.}
+\label{fig:degen}
+\end{figure}
+
+The contingency table on the $\ge1$~mm threshold is $a=2$ hits, $b=220$ false alarms, $c=0$ misses, $d=168$ correct negatives. Both wet days fell on days the method predicted rainy --- a perfect hit rate and zero misses --- but with $220$ false alarms this carries no evidential weight whatever: Fisher's exact test gives $p=0.508$. A rule predicting rain on $57\%$ of days will capture both members of a two-element event set more often than not by construction.
+
+Simulation makes the power explicit. We hold the observed predictor sequence fixed and inject a true relative risk $\mathrm{RR}$ between predicted-rain days and the rest, parameterised so that the marginal event rate remains at the observed value:
+\[
+p_{\mathrm{lo}}=\frac{\bar p}{f\,\mathrm{RR}+1-f},\qquad p_{\mathrm{hi}}=\mathrm{RR}\cdot p_{\mathrm{lo}},
+\]
+with $\bar p$ the base rate and $f$ the fraction of days forecast rainy. Power is the proportion of $20{,}000$ simulated samples reaching $p<0.05$ under Fisher's exact test (Table~\ref{tab:power}, Figure~\ref{fig:power}).
+
+\begin{table}[H]\centering\small
+\caption{Power at $\alpha=0.05$, Ahmedabad sample ($n=390$ days, $2$ events, $f=0.569$).}
+\label{tab:power}
+\begin{tabular}{lrrrrrr}
+\toprule
+True relative risk & $2\times$ & $3\times$ & $5\times$ & $10\times$ & $20\times$ & $50\times$\\
+\midrule
+Power & $0.2\%$ & $0.3\%$ & $0.6\%$ & $0.9\%$ & $1.2\%$ & $1.4\%$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.58\textwidth]{f4_power.pdf}
+\caption{Power at Ahmedabad. With two events the contingency table cannot be populated, and power remains near zero at every effect size: no relative risk, however large, is detectable in this sample.}
+\label{fig:power}
+\end{figure}
+
+The result is starker than a conventional underpowered study. Power does not rise with effect size in any useful way, because two events cannot populate a $2\times2$ table: even a fiftyfold true relative risk is detected in fewer than one and a half simulations in a hundred. The sample cannot adjudicate the method at any effect size whatever. The season-level test fares no better: predicted fraction against seasonal Pauṣa total gives $r=+0.199$ ($p=0.514$), Spearman $\rho=-0.048$ ($p=0.876$), on a target of which $54\%$ of values are tied at zero.
+
+We therefore report no skill statistic for the method. The correct statement is not that the \skt{daṇḍa-patākā} failed at Ahmedabad but that Ahmedabad cannot adjudicate it.
+
+\subsection{Why the predictand is absent}
+
+The reason is the winter climatology of $23^\circ$N. Across the full record Ahmedabad's mean December--February rainfall is $2.9$~mm per season, with $0.9\%$ of DJF days recording $\ge1$~mm. The sectors verse~31 codes as rain-bearing (N$+$W) and drought-bearing (E$+$S) occur in DJF with almost exactly equal frequency, $49.8\%$ against $50.2\%$, so the rule partitions the record evenly while the partition has nothing to track (Figure~\ref{fig:prov}b). There is no winter precipitation regime at this latitude for a winter-rain rule to be about.
+
+\section{Date and Provenance of the Text}
+\label{sec:prov}
+
+We summarise a companion study \cite{ghoshprov} on which \S\ref{sec:wd} depends.
+
+\paragraph{Date.} The received placement of the text before the fourth century \textsc{bce} is untenable. The Śaka-year argument inverts a terminus: a text instructing computation in Śaka years must \emph{postdate} the epoch of 78~\textsc{ce}. The technological-complexity argument --- that the text is simpler than the \skt{Arthaśāstra} and therefore earlier --- assumes unilinear development, ignores the genre difference between a farmer's manual and a revenue manual, and in its usual form credits Kauṭilya with a rain-gauge specification belonging to Varāhamihira. The defensible window for the surviving recension is \textbf{c.~78--1050~\textsc{ce}}, the upper bound fixed by quotation in Bhoja's \skt{Rājamārtaṇḍa}.
+
+\paragraph{Provenance: a layered model.} The \emph{meteorological} content points north-west. The text ends the rains with Śrāvaṇa, consistent with monsoon withdrawal along the eastern Indus around 1 September; it expects rain to begin in December or January and to arrive from the west or north; verse~63 makes failure of the June--July rains the cause of famine. A region requiring both the western disturbances and the summer monsoon, with a crop suite sustainable without irrigation, points to the submontane tract between $30^\circ$ and $34^\circ$N, Sialkot ($32^\circ30'$N) being the best specific candidate on Nene's reasoning \cite{sadhale}. The \skt{pravāha-daṇḍa} ritual of verses 48--52, set in Vaiśākha (April), corroborates this: a river informative in April is snow-fed.
+
+The \emph{lexical, ethnographic and codicological} evidence points east: the non-Sanskritic \skt{māyikā}/\skt{madikā} connected with Bengali \skt{mai}; practices surviving in Bengali villages; parallels with the Middle Bengali \skt{Khanār Vacan}; and, most weightily, the concentration of manuscripts in Bengal under the alternative title \skt{Parāśaratantra}.
+
+These answer different questions --- where the observations originated, and where the text was redacted and copied. A compilation assembled in eastern India from material of north-western origin satisfies every strand.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{f6_provenance.pdf}
+\caption{(a) Layered provenance of the \skt{Kṛṣi-Parāśara} --- meteorological core $30^\circ$--$34^\circ$N, redaction in Bengal --- against the Ahmedabad test site. (b) Ahmedabad's winter wind regime: the two sectors of verse~31 occur with near-parity and the rainfall they would indicate is essentially absent.}
+\label{fig:prov}
+\end{figure}
+
+\section{Discussion}
+
+\subsection{Verse 31 against western-disturbance meteorology: half-corroborated}
+\label{sec:wd}
+
+In the submontane north-west, winter precipitation is delivered by \emph{western disturbances}: extratropical cyclonic systems embedded in the subtropical westerly jet, tracking eastward from the Mediterranean and Caspian across Iran and Afghanistan into Pakistan and north-west India \cite{dimri}. Synoptic climatology places their frequency at four to seven per month in winter, with Dimri et al. reporting four to six intense systems monthly between December and March; objective tracking of upper-tropospheric vorticity in reanalysis recovers a comparable rate and a catalogue of over three thousand events across thirty-seven years \cite{hunt}. Individual systems affect a location for two to seven days, so the text's sixty-hour window is long enough to span one passage.
+
+The surface signature divides sharply about the system (Figure~\ref{fig:wd}). \emph{Ahead of} the disturbance, strong south-westerly to westerly flow supplies the moisture, and rain may begin before the vorticity centre arrives. \emph{Behind} it, the sky clears and cold, dry north-westerly and northerly winds descend from the snow-covered Himalaya, producing the characteristic post-frontal temperature drop and cold-wave conditions. Dimri et al. summarise the structure in a sentence: a migrating western disturbance is preceded by warm, moist air and followed by cold, dry air.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{f5_wd.pdf}
+\caption{The surface wind signature of a western disturbance, against verse~31. The \skt{vāruṇa} (westerly) clause matches the pre-frontal moist inflow that produces the rain; the \skt{saumya} (northerly) clause corresponds to the post-frontal dry clearance and is inverted.}
+\label{fig:wd}
+\end{figure}
+
+Verse~31 is therefore \emph{half-corroborated}. \skt{Vāruṇa} $\to$ \skt{vṛṣṭi} is physically correct and non-trivially so: a westerly at the flag in Pauṣa in the Punjab genuinely does indicate an approaching rain-bearing system. \skt{Saumya} $\to$ \skt{vṛṣṭi} is, at the surface, wrong --- true northerly flow is the post-storm dry regime.
+
+Two reconciliations are available and both are worth testing. The first is observational: an observer watching a flag across sixty hours would see the wind back and veer through the western and north-western quadrant during a single passage, and might not cleanly separate the moist westerly onset from the dry north-westerly clearance, especially since both fall in the half of the compass opposite the dry easterlies of the fair-weather regime. The second is that \skt{saumya} may encode the direction from which systems \emph{arrive} --- the north-west quadrant in the steering sense --- rather than the strict surface post-frontal wind. Either way, the rule captures a real signal and misattributes part of it, which is a more interesting outcome than either wholesale vindication or wholesale error.
+
+That the failure at Ahmedabad and the partial success of the rule in the north-west arise from the same physical account is, in our view, the strongest available support for the provenance model of \S\ref{sec:prov}.
+
+\subsection{The base rate is the binding constraint}
+\label{sec:baserate}
+
+The decisive quantity for any replication is the number of wet days available to be forecast. Table~\ref{tab:base} assembles December and January normals for the belt.
+
+\begin{table}[H]\centering\small
+\caption{Winter rainfall and rainy-day normals. IMD defines a rainy day as $\ge2.5$~mm; commercial aggregators generally use $\ge1$~mm and are not directly comparable (\S\ref{sec:caveats}).}
+\label{tab:base}
+\begin{tabular}{llrrrr}
+\toprule
+Station & Source / period & Dec (mm) & Dec days & Jan (mm) & Jan days\\
+\midrule
+Jammu ($32.7^\circ$N) & IMD 1991--2020 & $21.9$ & $1.5$ & $67.9$ & $\mathbf{3.5}$\\
+Dehradun ($30.3^\circ$N) & IMD 1991--2020 & $13.0$ & $1.1$ & $43.5$ & $2.8$\\
+Amritsar ($31.6^\circ$N) & IMD 1951--1980 & $14.8$ & $1.2$ & $28.0$ & $2.4$\\
+Ludhiana ($30.9^\circ$N) & IMD 1951--1980 & $14.4$ & $1.1$ & $26.5$ & $2.2$\\
+Sialkot ($32.5^\circ$N) & commercial, $\ge1$~mm & $\sim15$ & $\sim3$ & $35$--$58$ & $\sim3$--$8$\\
+Lahore ($31.5^\circ$N) & commercial, $\ge1$~mm & $\sim15$ & $\sim2$--$3$ & $25$--$34$ & $\sim3$--$4$\\
+Delhi Palam ($28.6^\circ$N) & IMD 1991--2020 & $5.8$ & $0.4$ & $17.2$ & $1.4$\\
+\midrule
+\textbf{Ahmedabad ($23.0^\circ$N)} & \textbf{this study} & \multicolumn{4}{c}{\textbf{Pauṣa: $0.15$ wet days/month; $0.28$~mm/season}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three points follow. First, the Balkundi--Nene localisation is climatologically sound: in Amritsar district roughly $13\%$ of annual rainfall falls in December--February, delivered chiefly by systems arriving from the west and north. Second, Sialkot's nomination is supported by its annual total of some $990$--$1000$~mm, markedly wetter than Lahore's $\sim636$~mm. Third, and decisive for design, moving from Ahmedabad's $0.15$ wet days per month to Jammu's $3.5$ raises the wet-day rate from $p\approx0.005$ to $p\approx0.10$, increasing the variance of a binomial predictand roughly twentyfold. \textbf{Site selection is a higher-leverage design decision than record length.}
+
+Pauṣa spans approximately mid-December to mid-January, straddling the December minimum and the January rise, so the effective Pauṣa base rate at a good site is around two to three wet days rather than the full January figure.
+
+\subsection{A specification for replication}
+\label{sec:repl}
+
+\paragraph{Sites.} Primary pair: \textbf{Sialkot} (the scholarly nominee) and \textbf{Jammu} (the highest confirmed modern winter wet-day rate on the Indian side). Sensitivity sites spanning the plains-to-foothill gradient: Amritsar, Gurdaspur or Pathankot, Chandigarh, Srinagar.
+
+\paragraph{Data.} Wind from ERA5 hourly $10$~m $u,v$ (1940--present, free via the Copernicus Climate Data Store), converted to meteorological direction to emulate the flag. Because the method rests on \emph{surface} wind direction, where reanalysis can diverge from an actual flag near complex terrain, ERA5 must be cross-validated against co-located NOAA Integrated Surface Database hourly station winds (Amritsar VIAR, Chandigarh VICG, Srinagar VISR, Jammu VIJU, Lahore OPLA, Sialkot OPST). Since verse~31 needs only quadrant resolution, moderate speed error is tolerable but systematic directional bias is not; we suggest a quadrant-concordance threshold of $\sim70\%$ before ERA5 is used for the full record. Precipitation from the IMD $0.25^\circ$ gridded daily dataset (1901--2024, built from some $6{,}955$ gauges) \cite{pai} for Indian sites, and Pakistan Meteorological Department station data or GHCN-Daily for Sialkot and Lahore. A 1950--2020 window yields approximately \textbf{seventy Pauṣa seasons}.
+
+\paragraph{Power.} Simulation under the same relative-risk model, at each site's base rate and with half the days forecast rainy, gives the power to detect $\mathrm{RR}=2$:
+
+\begin{table}[H]\centering\small
+\caption{Power at $\alpha=0.05$ to detect $\mathrm{RR}=2$, by site and number of Pauṣa seasons.}
+\label{tab:seasons}
+\begin{tabular}{lrrrrrr}
+\toprule
+Site & wet d/month & $10$ & $20$ & $30$ & $50$ & $70$\\
+\midrule
+Amritsar & $2.4$ & $32\%$ & $63\%$ & $81\%$ & $97\%$ & $99\%$\\
+Dehradun & $2.8$ & $38\%$ & $71\%$ & $88\%$ & $98\%$ & $100\%$\\
+Jammu & $3.5$ & $50\%$ & $83\%$ & $95\%$ & $100\%$ & $100\%$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These are optimistic, because the thirty Pauṣa days are strongly autocorrelated and the effective independent sample per season is closer to the number of synoptic episodes --- four to seven --- than to thirty; they should be read as lower bounds on the number of seasons. Thirty to sixty seasons are indicated, which the seventy-season window accommodates and thirteen never could.
+
+\paragraph{Verification.} Two nested tests should be reported. The \emph{daily occurrence} test asks whether the $k$th two-hour unit predicts rain on the $k$th day, and carries most of the power. The \emph{literal seasonal} test asks whether the sixty-hour observation predicts the month's rainfall as a whole, and is intrinsically low-power at one forecast per season. Both must use anomaly-based occurrence relative to a smoothed day-of-year climatology, report the Peirce (Hanssen--Kuipers) and Heidke scores, correct significance for effective degrees of freedom via $N_{\mathrm{eff}}=N(1-r_1)/(1+r_1)$ \cite{wilks,vonstorch}, and establish significance by block bootstrap resampling whole synoptic episodes or whole seasons. Skill must be benchmarked against both climatology and persistence reference forecasts \cite{jolliffe}.
+
+\paragraph{A warning we can give from experience.} Under an earlier and incorrect reconstruction of this method we obtained raw lagged correlations reaching $r=+0.41$ at $p<10^{-4}$, which vanished entirely under anomaly correlation (Appendix~C). Any Punjab replication reporting raw correlations will very likely produce similarly impressive and similarly empty numbers, because both predictor and predictand carry a strong annual cycle. The same trap is visible in the one closely comparable study we have found, a test of Hebrew first-of-month rain proverbs against Israeli station data 1950--2024, which reported a substantial apparent lift and then showed the effect decayed with lag exactly as daily rainfall autocorrelation does, concluding the skill derived from atmospheric persistence rather than from any property of the calendar. Persistence is the reference forecast the \skt{daṇḍa-patākā} must beat.
+
+\subsection{The Kevadiya series and the design of the method}
+\label{sec:design}
+
+Whatever its predictive standing, the \skt{daṇḍa-patākā} is an impressive piece of observational engineering. The time-mapping is exact at three nested levels with no remainder. A sixty-hour continuous watch is a demand for sustained instrumental observation rarely specified so explicitly in premodern literature, and --- unlike the month-long vigil implied by our first reconstruction --- an achievable one. The day/night subdivision recognises the diurnal structure of the wind field, and here Damodara Das's Kevadiya series earns its place independently of the null: it confirms that this structure is real and pronounced at these latitudes, with bearings swinging through some $70^\circ$ between pre-dawn and mid-afternoon. A protocol sampling only daylight hours would misrepresent the local wind climate; the text's does not. The naming of \skt{nirvāta} and \skt{saṃkula} as distinct states shows that calm and turbulence were understood as informational categories rather than absences of direction.
+
+\subsection{Prior work and the position of this study}
+
+Empirical assessment of Indian traditional rainfall knowledge is large in volume but thin in verification. Balkundi's commentary on the \skt{Kṛṣi-Parāśara} is textual and interpretive, and himself calls the cloud-based rainfall-amount technique imprecise and unwieldy. Work on the Ghāgh--Bhaḍḍarī proverbs of north India is cognitive and ethnographic, collecting sayings and canvassing elder cultivators on perceived accuracy without instrumental verification, though it notes that the wind-direction logic is consistent with moisture advection --- the same physical reading we reach in \S\ref{sec:wd}. The closest prior approach to formal verification is the Anand Agricultural University work on Gujarati \skt{Bhaḍalī vākya} and astro-meteorological monsoon rules, which uses hit-and-miss contingency scoring \cite{vaidya} but does not apply anomaly correction. Folklore documentation of the Bengali \skt{Khanār Vacan} is extensive but largely phenological.
+
+We are not aware of any prior study applying instrumental forecast verification to a \skt{Kṛṣi-Parāśara} rule. The contribution here is accordingly a reconstruction and a design rather than a measurement: we establish what the procedure specifies, demonstrate that the available dataset cannot adjudicate it and why, and specify the conditions under which it could be.
+
+\subsection{Limitations}
+\label{sec:caveats}
+
+\emph{Rainy-day definitions are not interchangeable.} The Pakistani figures in Table~\ref{tab:base} come from commercial aggregators using a $\ge1$~mm threshold and are not comparable with IMD's $\ge2.5$~mm counts. For publication these should be replaced with Pakistan Meteorological Department normals obtained directly.
+
+\emph{Base periods differ.} Only Jammu, Dehradun and Palam have confirmed IMD 1991--2020 rainy-day counts; the Amritsar and Ludhiana figures are 1951--1980 normals, retained because they are the only IMD-issued counts we could obtain for those stations.
+
+\emph{Non-stationarity.} Western-disturbance frequency and winter precipitation show multidecadal trends, so a seventy-year record mixes epochs and sub-period stability checks are required.
+
+\emph{Calendar alignment.} Pauṣa drifts against the Gregorian calendar, and intercalary-month (\skt{adhika-māsa}) corrections must be applied year by year before extracting windows, or the signal will be smeared across the wrong days.
+
+\emph{Outcome variable.} Gauge occurrence is not what the text's users cared about. \skt{Vṛṣṭi} in an agronomic manual means rain adequate to the crop at the right moment, and validation against sowing dates or yield would be a fairer test than any rainfall threshold.
+
+\emph{Recension.} Verses 30--33 need not be contemporaneous with those establishing the text's north-western meteorology. We assume they are, because they share the Pauṣa anchor and the wind-direction concern, but the assumption is unproved.
+
+\section{Conclusions}
+
+We reconstruct the \skt{Pauṣa-vṛṣṭi-nirṇaya} of \skt{Kṛṣi-Parāśara} vv.~30--33 in its narrowest and correct scope: a single $2\tfrac{1}{2}$-day observation of a flag on a staff, beginning at sunrise on Pauṣa \skt{śukla pratipadā}, whose thirty units of five \skt{daṇḍas} map one-to-one onto the thirty days of Pauṣa itself, each unit dividing at its midpoint into that day's daytime and nighttime rain. Sixty hours observed, sixty half-day forecasts, and nothing beyond the month.
+
+Tested at Ahmedabad the procedure cannot be evaluated. Two wet days in $390$; $3.6$~mm across thirteen seasons; seven seasons of exactly zero; power never above $1.4\%$ at any effect size. We report no skill statistic, because none computed on this sample would mean anything.
+
+The degeneracy is the finding. It is what the provenance model predicts, and it is corroborated by the physical reading of verse~31: the \skt{vāruṇa} clause matches the pre-frontal westerly inflow of a western disturbance, the \skt{saumya} clause matches the post-frontal dry clearance and is inverted, and both belong to a winter-rain regime that exists at $32^\circ$N and does not exist at $23^\circ$N. The method was tested outside the climate that gave it meaning, and the data record that absence with some precision.
+
+What remains is to run the test where it can be run. Sialkot and Jammu, seventy Pauṣa seasons, ERA5 winds validated against station observations, IMD gridded rainfall, anomaly-based occurrence scoring against climatology and persistence. We would expect the westerly clause to carry genuine signal and the northerly clause to underperform. Whether sixty hours of wind can forecast the following four weeks' departures from normal is a strong claim at any latitude, and we do not prejudge it --- but it is now a claim that can be settled.
+
+\section*{Data and Code Availability}
+The hourly and daily Ahmedabad series, the Kevadiya Colony ground-truth extraction, and the DarkSky parsing workbooks were assembled by Damodara Das and are held by the present author.
+
+The complete analysis code accompanies this paper as seven numbered Python scripts with a shared module and a master runner, reproducing every figure and every number reported here from the raw data in a single command. Stage 01 verifies the arithmetic reconstruction; 02 builds the $390$ forecast days; 03 performs the verification; 04 the power analysis and replication sizing; 05 the climatology; 06 the two superseded readings and the annual-cycle artefact; 07 the figures. Derived outputs (forecast days, season summary, power curve, seasonal march, lag artefact table) are written as CSV.
+
+\begin{thebibliography}{99}\small
+\bibitem{ghoshprov} Ghosh, B. \textit{Dating and Localising the Kṛṣi-Parāśara: A Critical Reassessment of the Chronological and Geographical Arguments}. Companion study, 2026.
+\bibitem{majumdar} Majumdar, G.\,P. \& Banerji, S.\,C., eds. (1960). \textit{Kṛṣi-Parāśara}. Calcutta: The Asiatic Society.
+\bibitem{sadhale} Sadhale, N., trans. (1999). \textit{Krishi-Parashara}, with commentaries by H.\,V. Balkundi and Y.\,L. Nene. Agri-History Bulletin No.~2. Secunderabad: Asian Agri-History Foundation.
+\bibitem{ayangarya} Ayangarya, V.\,S. (2004). Rainfall prediction and \skt{adhika-māsa} in the \textit{Kṛṣi-Parāśara}. \textit{Asian Agri-History}.
+\bibitem{dimri} Dimri, A.\,P., Niyogi, D., Barros, A.\,P., Ridley, J., Mohanty, U.\,C., Yasunari, T. \& Sikka, D.\,R. (2015). Western disturbances: a review. \textit{Reviews of Geophysics} 53(2), 225--246. doi:10.1002/2014RG000460.
+\bibitem{hunt} Hunt, K.\,M.\,R., Turner, A.\,G. \& Shaffrey, L.\,C. (2018). The evolution, seasonality and impacts of western disturbances. \textit{Quarterly Journal of the Royal Meteorological Society} 144, 278--290. doi:10.1002/qj.3200.
+\bibitem{pai} Pai, D.\,S., Sridhar, L., Rajeevan, M., Sreejith, O.\,P., Satbhai, N.\,S. \& Mukhopadhyay, B. (2014). Development of a new high spatial resolution ($0.25^\circ\times0.25^\circ$) long period (1901--2010) daily gridded rainfall data set over India. \textit{MAUSAM} 65(1), 1--18.
+\bibitem{jolliffe} Jolliffe, I.\,T. \& Stephenson, D.\,B. (2012). \textit{Forecast Verification: A Practitioner's Guide in Atmospheric Science}, 2nd ed. Wiley.
+\bibitem{wilks} Wilks, D.\,S. (2011). \textit{Statistical Methods in the Atmospheric Sciences}, 3rd ed. Academic Press.
+\bibitem{vonstorch} von Storch, H. \& Zwiers, F.\,W. (1999). \textit{Statistical Analysis in Climate Research}. Cambridge University Press.
+\bibitem{murphy} Murphy, A.\,H. (1988). Skill scores based on the mean square error and their relationships to the correlation coefficient. \textit{Monthly Weather Review} 116, 2417--2424.
+\bibitem{bretherton} Bretherton, C.\,S., Widmann, M., Dymnikov, V.\,P., Wallace, J.\,M. \& Bladé, I. (1999). The effective number of spatial degrees of freedom of a time-varying field. \textit{Journal of Climate} 12, 1990--2009.
+\bibitem{vaidya} Vaidya, V.\,B., Varshneya, M.\,C. et al. (2019). Validation of astro-meteorological monsoon predictions for Gujarat. \textit{International Journal of Current Microbiology and Applied Sciences} 8(5), 2359--2370.
+\bibitem{wojtilla} Wojtilla, G. (2006). \textit{History of Kṛṣiśāstra}. Wiesbaden: Harrassowitz.
+\bibitem{orlove} Orlove, B.\,S., Chiang, J.\,C.\,H. \& Cane, M.\,A. (2000). Forecasting Andean rainfall and crop yield from the influence of El Niño on Pleiades visibility. \textit{Nature} 403, 68--71.
+\bibitem{huntington} Huntington, H.\,P. (2000). Using traditional ecological knowledge in science. \textit{Ecological Applications} 10(5), 1270--1274.
+\end{thebibliography}
+
+\appendix
+\section{Pauṣa windows and outcomes}
+
+\begin{longtable}{lllrrr}
+\toprule
+Season & Pauṣa \skt{śukla pratipadā} & $t_0$ & Predicted fraction & Pauṣa rain (mm) & Wet days\\
+\midrule\endhead
+2008--09 & 28 Dec 2008 & 07:00 & $0.967$ & $0.0$ & $0$\\
+2009--10 & 16 Dec 2009 & 07:00 & $0.700$ & $0.4$ & $0$\\
+2010--11 & 05 Dec 2010 & 07:00 & $0.100$ & $0.2$ & $0$\\
+2011--12 & 24 Dec 2011 & 07:00 & $0.767$ & $0.0$ & $0$\\
+2012--13 & 13 Dec 2012 & 07:00 & $0.667$ & $0.0$ & $0$\\
+2013--14 & 02 Dec 2013 & 07:00 & $0.800$ & $0.0$ & $0$\\
+2014--15 & 22 Dec 2014 & 07:00 & $0.800$ & $1.6$ & $1$\\
+2015--16 & 11 Dec 2015 & 07:00 & $0.633$ & $0.0$ & $0$\\
+2016--17 & 29 Dec 2016 & 07:00 & $0.600$ & $1.1$ & $1$\\
+2017--18 & 18 Dec 2017 & 07:00 & $0.067$ & $0.0$ & $0$\\
+2018--19 & 07 Dec 2018 & 07:00 & $0.467$ & $0.0$ & $0$\\
+2019--20 & 26 Dec 2019 & 07:00 & $0.267$ & $0.1$ & $0$\\
+2020--21 & 14 Dec 2020 & 07:00 & $0.567$ & $0.2$ & $0$\\
+\midrule
+\textbf{Total} & & & $0.570$ & $\mathbf{3.6}$ & $\mathbf{2}$\\
+\bottomrule
+\end{longtable}
+
+\section{Every Pauṣa day with measurable rain, 2008--2020}
+
+\begin{longtable}{llrrrr}
+\toprule
+Season & Date & Pauṣa day $k$ & Day pred. & Night pred. & Rain (mm)\\
+\midrule\endhead
+2009--10 & 21 Dec 2009 & 6 & 1 & 1 & $0.1$\\
+2009--10 & 22 Dec 2009 & 7 & 1 & 1 & $0.3$\\
+2010--11 & 28 Dec 2010 & 24 & 0 & 0 & $0.1$\\
+2010--11 & 29 Dec 2010 & 25 & 0 & 0 & $0.1$\\
+2014--15 & 01 Jan 2015 & 11 & 1 & 1 & $\mathbf{1.6}$\\
+2016--17 & 26 Jan 2017 & 29 & 1 & 1 & $\mathbf{1.1}$\\
+2019--20 & 13 Jan 2020 & 19 & 1 & 1 & $0.1$\\
+2020--21 & 04 Jan 2021 & 22 & 0 & 0 & $0.2$\\
+\bottomrule
+\end{longtable}
+
+\noindent Eight days of measurable rain in thirteen years; two exceeding $1$~mm. Both of the latter were forecast rainy, alongside $220$ other days that were not.
+
+\section{Superseded reconstructions}
+
+Two earlier structural readings were tested and rejected. Their statistics are recorded because they show how a wrong reading behaves and because the second produced an instructive artefact.
+
+Values below are those produced by the archived analysis code (\texttt{06\_superseded.py}), which is the canonical implementation.
+
+\emph{Reading (ii): one continuous thirty-day vigil, twelve blocks of $2\tfrac{1}{2}$ days encoding the twelve months of the following year.} Pooled $r=+0.011$ ($p=0.896$) over $144$ month-cases; binary accuracy $50.7\%$; $\mathrm{HSS}=+0.014$. Robust to $\pm2$-day \skt{pañcāṅga} offsets ($r$ from $-0.048$ to $+0.092$) and to sunrise hours 06:00--08:00 ($r$ from $+0.005$ to $+0.017$); inverting verse~31 gave a mirror-image null.
+
+\emph{Reading (iii): the procedure recurring at each month's opening, each month forecasting itself.} Pooled $r=+0.002$ ($p=0.977$) over $149$ month-cases; accuracy $55.0\%$; $\mathrm{HSS}=+0.100$; \emph{zero} of twelve within-month interannual correlations significant at $\alpha=0.05$, against an expectation of $0.6$ by chance, with seven of twelve coefficients negative.
+
+Under reading (iii) the raw lagged correlations were striking: $r=+0.298$ at lag~2 ($p=0.0008$) and $r=+0.379$ at lag~3 ($p<10^{-4}$). All of it was the annual cycle. At Ahmedabad the south-westerly regime establishes itself in March--May, when $76$--$89\%$ of hours fall in the N$+$W sectors, while the rains arrive in July--September; two offset seasonal marches were being correlated. Removing the climatology collapsed the effect at every lag:
+
+\begin{longtable}{lrrrrr}
+\toprule
+Lag (months) & $n$ & Raw $r$ & $p$ & Anomaly $r$ & $p$\\
+\midrule\endhead
+0 & 149 & $+0.002$ & $0.977$ & $-0.118$ & $0.153$\\
+1 & 136 & $-0.012$ & $0.891$ & $-0.119$ & $0.168$\\
+2 & 123 & $+0.298$ & $0.0008$ & $+0.119$ & $0.190$\\
+3 & 110 & $+0.379$ & $<10^{-4}$ & $+0.099$ & $0.303$\\
+\bottomrule
+\end{longtable}
+
+\noindent The climatological series were strongly autocorrelated (lag-1 autocorrelation $+0.335$ for the predictor, $+0.706$ for rainfall), giving $N_{\mathrm{eff}}=N(1-r_1r_2)/(1+r_1r_2)\approx7.4$ from $N=12$: the apparent significance rested on roughly four independent points. This is the trap \S\ref{sec:repl} warns replications against.
+
+\end{document}
